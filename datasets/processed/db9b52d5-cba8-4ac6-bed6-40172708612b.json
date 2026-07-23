@@ -1,0 +1,45 @@
+{
+  "analysis_id": "db9b52d5-cba8-4ac6-bed6-40172708612b",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "org.eclipse.swt.SWTException: Widget is disposed. Stack trace shows failure in display.readAndDispatch().",
+  "triage": {
+    "priority": "high",
+    "component": "SWT / UI Thread Runtime",
+    "summary": "org.eclipse.swt.SWTException: Widget is disposed. Stack trace shows failure in display.readAndDispatch().",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "SWT / UI Thread Runtime-team",
+    "business_impact": "Potential service degradation in SWT / UI Thread Runtime component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "Exception"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Exception"
+    ],
+    "warnings": [],
+    "exception_type": "org.eclipse.swt.SWTException",
+    "failure_point": "display.readAndDispatch()",
+    "affected_code_path": "org.eclipse.swt.widgets.Display.readAndDispatch()",
+    "exceptions": [
+      "SWTException"
+    ],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-22T11:42:15.095799Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: SWT / UI Thread Runtime | Root Cause: unknown | Risk: high | Confidence: 0.75",
+  "overall_confidence": 0.75
+}

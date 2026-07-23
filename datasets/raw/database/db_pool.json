@@ -1,0 +1,1 @@
+java.sql.SQLTransientConnectionException: connection pool exhausted. HikariCP max limit reached under dashboard load.

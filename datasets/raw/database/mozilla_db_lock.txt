@@ -1,0 +1,1 @@
+Database is locked error on sqlite3. OperationalError: database is locked when writing to places.sqlite.

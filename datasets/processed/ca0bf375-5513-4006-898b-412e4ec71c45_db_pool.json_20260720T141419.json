@@ -1,0 +1,45 @@
+{
+  "analysis_id": "ca0bf375-5513-4006-898b-412e4ec71c45",
+  "source_file": "C:/Users/VAISHNAVI GOUD/Desktop/AI-Smart-Bug-Analyzer-And-Fix-Advisor-main/datasets/raw/database/db_pool.json",
+  "title": "db_pool",
+  "raw_input": "java.sql.SQLTransientConnectionException: connection pool exhausted. HikariCP max limit reached under dashboard load.",
+  "triage": {
+    "priority": "critical",
+    "component": "database",
+    "summary": "java.sql.SQLTransientConnectionException: connection pool exhausted. HikariCP max limit reached under dashboard load.",
+    "tags": [],
+    "severity_score": 9,
+    "recommended_assignee_team": "database-team",
+    "business_impact": "Potential service degradation in database component.",
+    "confidence": 0.7,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "Exception"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Exception"
+    ],
+    "warnings": [],
+    "exception_type": "ConnectionPoolTimeoutException",
+    "failure_point": "unknown",
+    "affected_code_path": "unknown",
+    "exceptions": [
+      "ConnectionPoolTimeoutException"
+    ],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.8
+  },
+  "processed_at": "2026-07-20T14:14:19.136943Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: database | Errors: 1 | Stack trace: no",
+  "overall_confidence": 0.75
+}

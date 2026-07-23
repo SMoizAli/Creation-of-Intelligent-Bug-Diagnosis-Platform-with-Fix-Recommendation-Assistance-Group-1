@@ -1,0 +1,1 @@
+Git fetch failed with early EOF. Connection reset by peer during packfile download. Repository mirroring task failed.

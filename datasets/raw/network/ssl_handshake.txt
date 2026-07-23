@@ -1,0 +1,1 @@
+javax.net.ssl.SSLHandshakeException: Remote host closed handshake on API Gateway. Production outage affecting iOS clients.

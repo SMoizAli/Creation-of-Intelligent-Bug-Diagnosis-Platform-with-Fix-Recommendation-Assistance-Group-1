@@ -1,0 +1,41 @@
+{
+  "analysis_id": "29ef4e25-ee27-4552-8116-8ced9ec879f8",
+  "source_file": "C:/Users/VAISHNAVI GOUD/Desktop/AI-Smart-Bug-Analyzer-And-Fix-Advisor-main/datasets/raw/network/ssl_handshake.txt",
+  "title": "ssl_handshake",
+  "raw_input": "javax.net.ssl.SSLHandshakeException: Remote host closed handshake on API Gateway. Production outage affecting iOS clients.",
+  "triage": {
+    "priority": "critical",
+    "component": "api",
+    "summary": "javax.net.ssl.SSLHandshakeException: Remote host closed handshake on API Gateway. Production outage affecting iOS clients.",
+    "tags": [],
+    "severity_score": 9,
+    "recommended_assignee_team": "api-team",
+    "business_impact": "Potential service degradation in api component.",
+    "confidence": 0.7
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "Exception"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Exception"
+    ],
+    "warnings": [],
+    "exceptions": [
+      "SSLHandshakeException"
+    ],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.8
+  },
+  "processed_at": "2026-07-15T15:38:46.289118Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: api | Errors: 1 | Stack trace: no",
+  "overall_confidence": 0.75
+}

@@ -1,0 +1,10 @@
+ERROR: 2026-07-20 12:45:01 Gateway Service Failure
+com.payment.gateway.GatewayTimeoutException: Timeout waiting for response from bank API gateway
+    at com.payment.gateway.GatewayClient.chargeCard(GatewayClient.java:104)
+    at com.payment.api.PaymentController.processTransaction(PaymentController.java:45)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+
+Details:
+HTTP Status 504: Gateway Timeout response from external payment processing hub. The payment gateway component is degraded due to high connection queue times on charging client.

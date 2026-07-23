@@ -1,0 +1,39 @@
+{
+  "analysis_id": "2c7455b5-fdcd-4351-9f8a-bab3804bf94a",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "Failed to parse notebook JSON. Unexpected token in JSON at position 1204. Notebook viewer throws 500.",
+  "triage": {
+    "priority": "high",
+    "component": "Jupyter Web Frontend / nbformat Parser",
+    "summary": "Failed to parse notebook JSON. Unexpected token in JSON at position 1204. Notebook viewer throws 500.",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "Jupyter Web Frontend / nbformat Parser-team",
+    "business_impact": "Potential service degradation in Jupyter Web Frontend / nbformat Parser component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 0,
+    "error_samples": [],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [],
+    "warnings": [],
+    "exception_type": "UnknownException",
+    "failure_point": "unknown",
+    "affected_code_path": "unknown",
+    "exceptions": [],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-22T08:26:32.352730Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: Jupyter Web Frontend / nbformat Parser | Root Cause: unknown | Risk: high | Confidence: 0.62",
+  "overall_confidence": 0.62
+}

@@ -1,0 +1,41 @@
+{
+  "analysis_id": "beda5bd1-2038-44d7-bbe6-7636f968d873",
+  "source_file": "C:/Users/VAISHNAVI GOUD/Desktop/AI-Smart-Bug-Analyzer-And-Fix-Advisor-main/datasets/raw/payment/pay_timeout.txt",
+  "title": "pay_timeout",
+  "raw_input": "PaymentService processPayment returned HTTP 503. payment-gateway took too long to respond. Intermittent checkout failures.",
+  "triage": {
+    "priority": "medium",
+    "component": "payment",
+    "summary": "PaymentService processPayment returned HTTP 503. payment-gateway took too long to respond. Intermittent checkout failures.",
+    "tags": [],
+    "severity_score": 5,
+    "recommended_assignee_team": "payment-team",
+    "business_impact": "Potential service degradation in payment component.",
+    "confidence": 0.7,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 5."
+  },
+  "log_analysis": {
+    "error_count": 0,
+    "error_samples": [],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [
+      503
+    ],
+    "log_format": "plain_text",
+    "detected_errors": [],
+    "warnings": [],
+    "exception_type": "UnknownException",
+    "failure_point": "unknown",
+    "affected_code_path": "unknown",
+    "exceptions": [],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.8
+  },
+  "processed_at": "2026-07-15T16:16:33.941800Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: medium | Component: payment | Errors: 0 | Stack trace: no",
+  "overall_confidence": 0.75
+}

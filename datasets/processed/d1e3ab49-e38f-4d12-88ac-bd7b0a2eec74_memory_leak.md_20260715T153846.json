@@ -1,0 +1,37 @@
+{
+  "analysis_id": "d1e3ab49-e38f-4d12-88ac-bd7b0a2eec74",
+  "source_file": "C:/Users/VAISHNAVI GOUD/Desktop/AI-Smart-Bug-Analyzer-And-Fix-Advisor-main/datasets/raw/ui/memory_leak.md",
+  "title": "memory_leak",
+  "raw_input": "React memory leak in workspace card render. useEffect hook lacks cleanup. DOM node allocations grow unbounded in Chrome.",
+  "triage": {
+    "priority": "medium",
+    "component": "unknown",
+    "summary": "React memory leak in workspace card render. useEffect hook lacks cleanup. DOM node allocations grow unbounded in Chrome.",
+    "tags": [
+      "memory"
+    ],
+    "severity_score": 5,
+    "recommended_assignee_team": "unknown-team",
+    "business_impact": "Unknown system impact.",
+    "confidence": 0.7
+  },
+  "log_analysis": {
+    "error_count": 0,
+    "error_samples": [],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [],
+    "warnings": [],
+    "exceptions": [],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.8
+  },
+  "processed_at": "2026-07-15T15:38:46.299251Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: medium | Component: unknown | Errors: 0 | Stack trace: no",
+  "overall_confidence": 0.75
+}

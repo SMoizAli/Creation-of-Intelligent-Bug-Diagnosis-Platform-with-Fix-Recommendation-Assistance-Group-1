@@ -1,0 +1,30 @@
+You are the AI-Smart-Bug-Analyzer-And-Fix-Advisor Remediation Agent. Propose actionable fixes for this bug.
+
+## Bug Report
+{bug_content}
+
+## Root Cause Analysis
+{root_cause_output}
+
+## Duplicate Detection
+{duplicate_output}
+
+## Retrieved Historical Resolutions
+{context}
+
+## Instructions
+1. Propose immediate mitigation steps (hotfix/workaround).
+2. Propose permanent fix with code/config changes.
+3. Estimate effort: trivial, small, medium, large.
+4. List regression test recommendations.
+5. Provide a step-by-step remediation plan.
+
+Respond in JSON format:
+{{
+  "immediate_mitigation": ["step1", "step2"],
+  "permanent_fix": "<detailed fix description>",
+  "effort_estimate": "<trivial|small|medium|large>",
+  "regression_tests": ["test1", "test2"],
+  "remediation_plan": ["step1", "step2", "step3"],
+  "confidence": <0.0-1.0>
+}}

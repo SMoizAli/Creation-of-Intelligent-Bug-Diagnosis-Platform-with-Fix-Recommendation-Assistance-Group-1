@@ -1,0 +1,56 @@
+{
+  "analysis_id": "a2901894-54a1-40b4-a10f-80a340ccb695",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "{\n\"bug_id\": \"BUG-ECL-201\",\n\"priority\": \"high\",\n\"component\": \"compiler\",\n\"resolution\": \"Fixed ClassCastException in JDT JavaCompiler type inference during nested generic lambda bounds checking.\",\n\"source\": \"eclipse\",\n\"date\": \"2024-02-14\",\n\"tags\": [\"jdt\", \"compiler\", \"java\", \"generics\"],\n\"filename\": \"jdt_compiler_exception.log\",\n\"text\": \"ERROR: java.lang.ClassCastException: org.eclipse.jdt.internal.compiler.lookup.ParameterizedTypeBinding cannot be cast to ReferenceBinding at org.eclipse.jdt.internal.compiler.ast.AllocationExpression.resolveType(AllocationExpression.java:482). InternalCompilerError.\"\n}",
+  "triage": {
+    "priority": "high",
+    "component": "unknown",
+    "summary": "{\n\"bug_id\": \"BUG-ECL-201\",\n\"priority\": \"high\",\n\"component\": \"compiler\",\n\"resolution\": \"Fixed ClassCastException in JDT JavaCompiler type inference during nested generic lambda bounds checking.\",\n\"sour...",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "unknown-team",
+    "business_impact": "Unknown system impact.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 3,
+    "error_samples": [
+      "Exception",
+      "exception",
+      "ERROR"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [
+      482
+    ],
+    "log_format": "json",
+    "detected_errors": [
+      "Exception",
+      "exception",
+      "ERROR"
+    ],
+    "warnings": [],
+    "exception_type": "ClassCastException",
+    "failure_point": "Line 482",
+    "affected_code_path": "AllocationExpression.java",
+    "exceptions": [
+      "ClassCastException",
+      "InternalCompilerError"
+    ],
+    "file_names": [
+      "AllocationExpression.java"
+    ],
+    "line_numbers": [
+      482
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-22T07:31:40.851616Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: unknown | Root Cause: integration | Risk: high | Confidence: 0.66",
+  "overall_confidence": 0.66
+}

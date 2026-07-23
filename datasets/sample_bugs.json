@@ -1,0 +1,52 @@
+[
+  {
+    "bug_id": "BUG-001",
+    "priority": "critical",
+    "component": "authentication",
+    "resolution": "Fixed null check in token validation",
+    "source": "seed",
+    "date": "2024-06-01",
+    "tags": ["login", "crash"],
+    "text": "NullPointerException during login when JWT token is expired. Stack trace in AuthService.validateToken at line 142. Users cannot authenticate after session timeout."
+  },
+  {
+    "bug_id": "BUG-002",
+    "priority": "high",
+    "component": "database",
+    "resolution": "Increased connection pool size from 10 to 50",
+    "source": "seed",
+    "date": "2024-06-15",
+    "tags": ["timeout", "database"],
+    "text": "Database connection timeout after 30s under load. HikariCP pool exhausted. Error: java.sql.SQLTransientConnectionException - Connection is not available."
+  },
+  {
+    "bug_id": "BUG-003",
+    "priority": "medium",
+    "component": "api",
+    "resolution": "Added retry logic with exponential backoff",
+    "source": "seed",
+    "date": "2024-07-01",
+    "tags": ["integration", "503"],
+    "text": "HTTP 503 from payment gateway integration. Intermittent failures during checkout. PaymentService.processPayment returns ServiceUnavailable."
+  },
+  {
+    "bug_id": "BUG-004",
+    "priority": "high",
+    "component": "frontend",
+    "resolution": "Fixed race condition in state update",
+    "source": "seed",
+    "date": "2024-07-10",
+    "tags": ["ui", "memory"],
+    "text": "React memory leak in dashboard component. useEffect cleanup missing. Browser tab memory grows unbounded after 30 minutes of use."
+  },
+  {
+    "bug_id": "BUG-005",
+    "priority": "critical",
+    "component": "network",
+    "resolution": "Updated TLS certificate and cipher suite",
+    "source": "seed",
+    "date": "2024-08-01",
+    "tags": ["security", "ssl"],
+    "text": "SSL handshake failure on production API gateway. javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake. Affects all external API calls."
+  }
+]

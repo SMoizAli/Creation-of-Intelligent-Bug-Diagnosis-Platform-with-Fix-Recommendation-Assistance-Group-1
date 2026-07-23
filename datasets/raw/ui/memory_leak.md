@@ -1,0 +1,1 @@
+React memory leak in workspace card render. useEffect hook lacks cleanup. DOM node allocations grow unbounded in Chrome.

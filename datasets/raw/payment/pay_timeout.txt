@@ -1,0 +1,1 @@
+PaymentService processPayment returned HTTP 503. payment-gateway took too long to respond. Intermittent checkout failures.

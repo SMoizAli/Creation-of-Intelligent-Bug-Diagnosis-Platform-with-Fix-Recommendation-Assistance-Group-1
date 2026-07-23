@@ -1,0 +1,70 @@
+{
+  "analysis_id": "3a3f9984-1769-4938-99c6-130011ae431b",
+  "source_file": "sample_payment_bug.txt",
+  "title": "Bug Report ",
+  "raw_input": "ERROR: 2026-07-20 12:45:01 Gateway Service Failure\ncom.payment.gateway.GatewayTimeoutException: Timeout waiting for response from bank API gateway\nat com.payment.gateway.GatewayClient.chargeCard(GatewayClient.java:104)\nat com.payment.api.PaymentController.processTransaction(PaymentController.java:45)\nat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\nat java.lang.reflect.Method.invoke(Method.java:498)\nDetails:\nHTTP Status 504: Gateway Timeout response from external payment processing hub. The payment gateway component is degraded due to high connection queue times on charging client.",
+  "triage": {
+    "priority": "high",
+    "component": "payment",
+    "summary": "ERROR: 2026-07-20 12:45:01 Gateway Service Failure\ncom.payment.gateway.GatewayTimeoutException: Timeout waiting for response from bank API gateway\nat com.payment.gateway.GatewayClient.chargeCard(Gatew...",
+    "tags": [
+      "timeout"
+    ],
+    "severity_score": 7,
+    "recommended_assignee_team": "payment-team",
+    "business_impact": "Potential service degradation in payment component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 2,
+    "error_samples": [
+      "ERROR",
+      "Exception"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at com.payment.gateway.GatewayClient.chargeCard(GatewayClient.java:104)",
+      "at com.payment.api.PaymentController.processTransaction(PaymentController.java:45)",
+      "at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
+      "at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)",
+      "at java.lang.reflect.Method.invoke(Method.java:498)"
+    ],
+    "timestamps_found": [
+      "2026-07-20 12:45:01"
+    ],
+    "http_status_codes": [
+      504,
+      498
+    ],
+    "log_format": "structured_log",
+    "detected_errors": [
+      "ERROR",
+      "Exception"
+    ],
+    "warnings": [],
+    "exception_type": "GatewayTimeoutException",
+    "failure_point": "Line 104",
+    "affected_code_path": "GatewayClient.java",
+    "exceptions": [
+      "GatewayTimeoutException"
+    ],
+    "file_names": [
+      "GatewayClient.java",
+      "PaymentController.java",
+      "NativeMethodAccessorImpl.java",
+      "Method.java"
+    ],
+    "line_numbers": [
+      104,
+      45,
+      62,
+      498
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-22T07:28:46.733342Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: payment | Root Cause: code_defect | Risk: critical | Confidence: 0.71",
+  "overall_confidence": 0.71
+}

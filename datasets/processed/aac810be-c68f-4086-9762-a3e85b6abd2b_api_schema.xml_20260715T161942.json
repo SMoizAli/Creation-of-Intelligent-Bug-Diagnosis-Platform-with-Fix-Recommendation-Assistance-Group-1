@@ -1,0 +1,45 @@
+{
+  "analysis_id": "aac810be-c68f-4086-9762-a3e85b6abd2b",
+  "source_file": "C:/Users/VAISHNAVI GOUD/Desktop/AI-Smart-Bug-Analyzer-And-Fix-Advisor-main/datasets/raw/api/api_schema.xml",
+  "title": "api_schema",
+  "raw_input": "XML Parsing Error on POST /api/v1/users. Invalid character in payload parsing context. Schema mismatches.",
+  "triage": {
+    "priority": "high",
+    "component": "api",
+    "summary": "XML Parsing Error on POST /api/v1/users. Invalid character in payload parsing context. Schema mismatches.",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "api-team",
+    "business_impact": "Potential service degradation in api component.",
+    "confidence": 0.7,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "Error"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Error"
+    ],
+    "warnings": [],
+    "exception_type": "XmlSchemaException",
+    "failure_point": "unknown",
+    "affected_code_path": "unknown",
+    "exceptions": [
+      "XmlSchemaException"
+    ],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.8
+  },
+  "processed_at": "2026-07-15T16:19:42.304575Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: api | Errors: 1 | Stack trace: no",
+  "overall_confidence": 0.75
+}

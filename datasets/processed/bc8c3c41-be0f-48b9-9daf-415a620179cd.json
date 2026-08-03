@@ -1,0 +1,63 @@
+{
+  "analysis_id": "bc8c3c41-be0f-48b9-9daf-415a620179cd",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "org.eclipse.swt.SWTException: Widget is disposed. Stack trace shows failure in display.readAndDispatch().\nat org.eclipse.swt.widgets.Error.error(Error.java:39)\nat org.eclipse.swt.widgets.Widget.error(Widget.java:338)\nat org.eclipse.swt.widgets.Widget.checkWidget(Widget.java:233)\nat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3720)",
+  "triage": {
+    "priority": "high",
+    "component": "SWT / UI Thread Runtime",
+    "summary": "org.eclipse.swt.SWTException: Widget is disposed. Stack trace shows failure in display.readAndDispatch().\nat org.eclipse.swt.widgets.Error.error(Error.java:39)\nat org.eclipse.swt.widgets.Widget.error(...",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "SWT / UI Thread Runtime-team",
+    "business_impact": "Potential service degradation in SWT / UI Thread Runtime component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 3,
+    "error_samples": [
+      "Exception",
+      "Error",
+      "error"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at org.eclipse.swt.widgets.Error.error(Error.java:39)",
+      "at org.eclipse.swt.widgets.Widget.error(Widget.java:338)",
+      "at org.eclipse.swt.widgets.Widget.checkWidget(Widget.java:233)",
+      "at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3720)"
+    ],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Exception",
+      "Error",
+      "error"
+    ],
+    "warnings": [],
+    "exception_type": "org.eclipse.swt.SWTException",
+    "failure_point": "display.readAndDispatch()",
+    "affected_code_path": "org.eclipse.swt.widgets.Display.readAndDispatch()",
+    "exceptions": [
+      "SWTException"
+    ],
+    "file_names": [
+      "Error.java",
+      "Widget.java",
+      "Display.java"
+    ],
+    "line_numbers": [
+      39,
+      338,
+      233,
+      3720
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-27T15:06:20.974035Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: SWT / UI Thread Runtime | Root Cause: code_defect | Risk: high | Confidence: 0.79",
+  "overall_confidence": 0.79
+}

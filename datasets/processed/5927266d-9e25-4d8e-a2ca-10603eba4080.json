@@ -1,0 +1,54 @@
+{
+  "analysis_id": "5927266d-9e25-4d8e-a2ca-10603eba4080",
+  "source_file": "asba-rag-report-ccbcb077-afe4-4f0b-a3e9-a2a53de42e81.md",
+  "title": "Bug Report ",
+  "raw_input": "# ASBA RAG Search Report\nGenerated: 2026-07-12T08:51:04.113652\nBug ID: 72d4ec18-bf0f-4d7b-9530-0462e83902ee\nTitle: Bug Report 4c972526\nDescription:\napplication crashes when users click \"pay now\"\n## Similar Historical Bugs Retrieved (RAG):\n### [1] Bug ID: BUG-102\n- Similarity Score: 36.6%\n- Component: payment\n- Priority: high\n- Match Content:\nPaymentService processPayment returned HTTP 503. payment-gateway took too long to respond. Intermittent checkout failures for 8% of users. SocketTimeoutException at PaymentClient.sendRequest.\n### [2] Bug ID: 454e47d1-3f48-444c-8e1d-5b75b10e4797\n- Similarity Score: 36.0%\n- Component: unknown\n- Priority: unknown\n- Match Content:\n0006   #6           module.          behavior. designed.module.         Medium High     Performance Closed    / Chrome\n1. Open\napp; 2.\nA                Navigate\nreproducible     to module; System Unexpected\nissue was        3. Perform should behavior\nSecurity:    observed in      action; 4. behave occurs in\nBUG-   Sample issue the security     Observe as         security                                              Windows 11\n### [3] Bug ID: 454e47d1-3f48-444c-8e1d-5b75b10e4797\n- Similarity Score: 32.9%\n- Component: unknown\n- Priority: unknown\n- Match Content:\nProfile:     observed in      action; 4. behave occurs in\nBUG-   Sample issue the profile      Observe as         profile                                             Windows 11\n0065   #65          module.          behavior. designed.module.         Critical High   Profile     Reopened/ Chrome\n1. Open\napp; 2.\nA               Navigate\nreproducible    to module; System\nissue was       3. Perform should Unexpected\nobserved in     action; 4. behave behavior\n### [4] Bug ID: 454e47d1-3f48-444c-8e1d-5b75b10e4797\n- Similarity Score: 33.9%\n- Component: unknown\n- Priority: unknown\n- Match Content:\nobserved in action; 4. behave behavior\nBUG-   API: Sample the api          Observe as          occurs in api                             In       Windows 11\n0056   issue #56      module.       behavior. designed.module.        Low    Low    API           Progress / Chrome\n1. Open\napp; 2.\nA             Navigate\nreproducible to module; System\nissue was     3. Perform should Unexpected\nobserved in action; 4. behave behavior\n### [5] Bug ID: 454e47d1-3f48-444c-8e1d-5b75b10e4797\n- Similarity Score: 31.6%\n- Component: unknown\n- Priority: unknown\n- Match Content:\nReports:       observed in action; 4. behave occurs in\nBUG-   Sample issue the reports Observe as              reports                                            Android 15 /\n0062   #62            module.       behavior. designed.module.        Low    High   Reports       Resolved Chrome\n1. Open\nA             app; 2.\nreproducible Navigate\nissue was     to module; System Unexpected\nobserved in 3. Perform should behavior\nAuthentication:the           action; 4. behave occurs in",
+  "triage": {
+    "priority": "critical",
+    "component": "payment",
+    "summary": "# ASBA RAG Search Report\nGenerated: 2026-07-12T08:51:04.113652\nBug ID: 72d4ec18-bf0f-4d7b-9530-0462e83902ee\nTitle: Bug Report 4c972526\nDescription:\napplication crashes when users click \"pay now\"\n## Si...",
+    "tags": [
+      "crash",
+      "timeout",
+      "security",
+      "performance"
+    ],
+    "severity_score": 9,
+    "recommended_assignee_team": "payment-team",
+    "business_impact": "Potential service degradation in payment component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "Exception"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [
+      "2026-07-12T08:51:04"
+    ],
+    "http_status_codes": [
+      503
+    ],
+    "log_format": "structured_log",
+    "detected_errors": [
+      "Exception"
+    ],
+    "warnings": [],
+    "exception_type": "GatewayTimeoutException",
+    "failure_point": "unknown",
+    "affected_code_path": "unknown",
+    "exceptions": [
+      "SocketTimeoutException"
+    ],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-03T14:01:00.678210Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: payment | Root Cause: integration | Risk: critical | Confidence: 0.7",
+  "overall_confidence": 0.7
+}

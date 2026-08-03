@@ -1,0 +1,58 @@
+{
+  "analysis_id": "fbbb4a85-852e-4aac-9f5a-13b25cc5985c",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "Failed to parse notebook JSON. Unexpected token in JSON at position 1204. Notebook viewer throws 500.\nException in thread \"main\" java.lang.RuntimeException: Error rendering cell output at index 14.\nat com.kaggle.notebook.viewer.NotebookParser.parse(NotebookParser.java:88)\nat com.kaggle.notebook.server.ViewHandler.handleRequest(ViewHandler.java:42)",
+  "triage": {
+    "priority": "high",
+    "component": "Jupyter Web Frontend / nbformat Parser",
+    "summary": "Failed to parse notebook JSON. Unexpected token in JSON at position 1204. Notebook viewer throws 500.\nException in thread \"main\" java.lang.RuntimeException: Error rendering cell output at index 14.\nat...",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "Jupyter Web Frontend / nbformat Parser-team",
+    "business_impact": "Potential service degradation in Jupyter Web Frontend / nbformat Parser component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 2,
+    "error_samples": [
+      "Failed",
+      "Exception"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at com.kaggle.notebook.viewer.NotebookParser.parse(NotebookParser.java:88)",
+      "at com.kaggle.notebook.server.ViewHandler.handleRequest(ViewHandler.java:42)"
+    ],
+    "timestamps_found": [],
+    "http_status_codes": [
+      500
+    ],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Failed",
+      "Exception"
+    ],
+    "warnings": [],
+    "exception_type": "json.JSONDecodeError",
+    "failure_point": "notebook viewer JSON parser at position 1204",
+    "affected_code_path": "components/notebook/viewer/parser.py",
+    "exceptions": [
+      "RuntimeException"
+    ],
+    "file_names": [
+      "NotebookParser.java",
+      "ViewHandler.java"
+    ],
+    "line_numbers": [
+      88,
+      42
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-27T14:52:21.668417Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: Jupyter Web Frontend / nbformat Parser | Root Cause: code_defect | Risk: high | Confidence: 0.77",
+  "overall_confidence": 0.77
+}

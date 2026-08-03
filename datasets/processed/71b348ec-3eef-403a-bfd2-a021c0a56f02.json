@@ -1,0 +1,69 @@
+{
+  "analysis_id": "71b348ec-3eef-403a-bfd2-a021c0a56f02",
+  "source_file": "samplebug 2.pdf",
+  "title": "Bug Report ",
+  "raw_input": "====================================================================\nINCIDENT REPORT: ECLIPSE SWT RUNTIME EXCEPTION\nTimestamp: 2026-06-27 14:32:10 UTC\nEnvironment: Production / Workspace JDT Core\nSeverity Level: HIGH (Critical UI Thread Block)\n====================================================================\nERROR TRACE:\norg.eclipse.swt.SWTException: Widget is disposed. Stack trace shows failure in\ndisplay.readAndDispatch().\nat org.eclipse.swt.widgets.Error.error(Error.java:39)\nat org.eclipse.swt.widgets.Widget.error(Widget.java:338)\nat org.eclipse.swt.widgets.Widget.checkWidget(Widget.java:233)\nat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3720)\nDIAGNOSTIC CONTEXT:\nModule: SWT / UI Thread Runtime\nComponent: Workspace Layout Renderer\nFailure Point: display.readAndDispatch()\nRoot Cause Hypothesis: Asynchronous background thread attempted to update UI elements\nafter widget disposal.",
+  "triage": {
+    "priority": "critical",
+    "component": "SWT / UI Thread Runtime",
+    "summary": "====================================================================\nINCIDENT REPORT: ECLIPSE SWT RUNTIME EXCEPTION\nTimestamp: 2026-06-27 14:32:10 UTC\nEnvironment: Production / Workspace JDT Core\nSeve...",
+    "tags": [],
+    "severity_score": 9,
+    "recommended_assignee_team": "SWT / UI Thread Runtime-team",
+    "business_impact": "Potential service degradation in SWT / UI Thread Runtime component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 5,
+    "error_samples": [
+      "EXCEPTION",
+      "ERROR",
+      "Exception",
+      "Error",
+      "error"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at org.eclipse.swt.widgets.Error.error(Error.java:39)",
+      "at org.eclipse.swt.widgets.Widget.error(Widget.java:338)",
+      "at org.eclipse.swt.widgets.Widget.checkWidget(Widget.java:233)",
+      "at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3720)"
+    ],
+    "timestamps_found": [
+      "2026-06-27 14:32:10"
+    ],
+    "http_status_codes": [],
+    "log_format": "structured_log",
+    "detected_errors": [
+      "EXCEPTION",
+      "ERROR",
+      "Exception",
+      "Error",
+      "error"
+    ],
+    "warnings": [],
+    "exception_type": "org.eclipse.swt.SWTException",
+    "failure_point": "display.readAndDispatch()",
+    "affected_code_path": "org.eclipse.swt.widgets.Display.readAndDispatch()",
+    "exceptions": [
+      "SWTException"
+    ],
+    "file_names": [
+      "Error.java",
+      "Widget.java",
+      "Display.java"
+    ],
+    "line_numbers": [
+      39,
+      338,
+      233,
+      3720
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-07-27T15:37:22.526605Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: SWT / UI Thread Runtime | Root Cause: code_defect | Risk: critical | Confidence: 0.77",
+  "overall_confidence": 0.77
+}

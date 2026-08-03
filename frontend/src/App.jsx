@@ -85,7 +85,14 @@ export default function App() {
     try {
       const analyzeResult = await analyzeBug(submittedBug.id);
       clearInterval(interval);
-      setAnalysis(analyzeResult.analysis);
+      // Enrich analysis with bug file metadata for UI display
+      const enrichedAnalysis = {
+        ...analyzeResult.analysis,
+        file_name: submittedBug.file_name || analyzeResult.analysis?.file_name,
+        source_file: submittedBug.file_name || 'pasted_text',
+        title: submittedBug.title || analyzeResult.analysis?.title,
+      };
+      setAnalysis(enrichedAnalysis);
       setUiState('completed');
       setTimelineIndex(stages.length);
       
@@ -104,7 +111,9 @@ export default function App() {
     setUiState('loading_history');
     try {
       const result = await getAnalysis(analysisId);
-      setAnalysis(result);
+      // API returns the object directly for GET /analysis/:id
+      const analysisData = result?.analysis || result;
+      setAnalysis(analysisData);
       setUiState('completed');
       setActiveView('results');
       setNotification('Historical analysis record loaded.');

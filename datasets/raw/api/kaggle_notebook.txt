@@ -1,1 +1,4 @@
 Failed to parse notebook JSON. Unexpected token in JSON at position 1204. Notebook viewer throws 500.
+Exception in thread "main" java.lang.RuntimeException: Error rendering cell output at index 14.
+at com.kaggle.notebook.viewer.NotebookParser.parse(NotebookParser.java:88)
+at com.kaggle.notebook.server.ViewHandler.handleRequest(ViewHandler.java:42)

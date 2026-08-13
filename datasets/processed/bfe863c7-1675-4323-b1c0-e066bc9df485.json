@@ -1,0 +1,69 @@
+{
+  "analysis_id": "bfe863c7-1675-4323-b1c0-e066bc9df485",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "CRITICAL EXCEPTION IN PRODUCTION MODULE: CorePaymentGatewayEngine\nTimestamp: 2026-08-13T22:12:40.109Z\nService: payment-gateway-cluster-us-west\nEnvironment: production-us-east-2\nError Type: ConcurrentTransactionDeadlockException / RedisDistributedLockTimeout\nStack Trace:\nat com.enterprise.payment.lock.RedisDistributedLock.acquireExclusiveLock(RedisDistributedLock.java:89)\nat com.enterprise.payment.core.TransactionProcessor.executePaymentTransfer(TransactionProcessor.java:145)\nat com.enterprise.payment.api.PaymentGatewayController.processBatch(PaymentGatewayController.java:64)\nCaused by: org.postgresql.util.PSQLException: ERROR: deadlock detected. Process 4120 waits for ExclusiveLock on relation 18392 of database finance; blocked by process 3981.\nSystem Telemetry at Failure:\n- CPU Load: 99.1% (Critical Spike)\n- Active Database Connections: 200/200 (Pool Exhausted)\n- Memory Heap Used: 8.8 GB / 10 GB\n- Failed Transaction Rate: 42.5 req/sec",
+  "triage": {
+    "priority": "critical",
+    "component": "database",
+    "summary": "CRITICAL EXCEPTION IN PRODUCTION MODULE: CorePaymentGatewayEngine\nTimestamp: 2026-08-13T22:12:40.109Z\nService: payment-gateway-cluster-us-west\nEnvironment: production-us-east-2\nError Type: ConcurrentT...",
+    "tags": [
+      "timeout",
+      "memory"
+    ],
+    "severity_score": 9,
+    "recommended_assignee_team": "database-team",
+    "business_impact": "Potential service degradation in database component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 4,
+    "error_samples": [
+      "EXCEPTION",
+      "Error",
+      "Exception",
+      "Failed"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at com.enterprise.payment.lock.RedisDistributedLock.acquireExclusiveLock(RedisDistributedLock.java:89)",
+      "at com.enterprise.payment.core.TransactionProcessor.executePaymentTransfer(TransactionProcessor.java:145)",
+      "at com.enterprise.payment.api.PaymentGatewayController.processBatch(PaymentGatewayController.java:64)"
+    ],
+    "timestamps_found": [
+      "2026-08-13T22:12:40"
+    ],
+    "http_status_codes": [],
+    "log_format": "structured_log",
+    "detected_errors": [
+      "EXCEPTION",
+      "Error",
+      "Exception",
+      "Failed"
+    ],
+    "warnings": [],
+    "exception_type": "ConnectionPoolTimeoutException",
+    "failure_point": "acquireExclusiveLock in RedisDistributedLock.java:89",
+    "affected_code_path": "com.enterprise.payment.lock.RedisDistributedLock",
+    "exceptions": [
+      "PSQLException",
+      "ConcurrentTransactionDeadlockException"
+    ],
+    "file_names": [
+      "RedisDistributedLock.java",
+      "TransactionProcessor.java",
+      "PaymentGatewayController.java"
+    ],
+    "line_numbers": [
+      89,
+      145,
+      64
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-13T16:46:38.629465Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: database | Root Cause: code_defect | Risk: critical | Confidence: 0.77",
+  "overall_confidence": 0.77
+}

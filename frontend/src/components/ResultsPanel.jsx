@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SelfHealingPR from './SelfHealingPR';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
 
@@ -45,7 +46,7 @@ const TABS = [
 ];
 
 /* ══════════════════════════════════════════════════════════ */
-export default function ResultsPanel({ analysis, onDownload, onCopy }) {
+export default function ResultsPanel({ analysis, onDownload, onCopy, showSelfHealPR }) {
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!analysis) {
@@ -78,7 +79,7 @@ export default function ResultsPanel({ analysis, onDownload, onCopy }) {
 
   const handleCopy = () => {
     const textReport = [
-      `AI-Smart-Bug-Analyzer Analysis: ${analysis.summary}`,
+      `Intelligent Bug Diagnosis Analysis: ${analysis.summary}`,
       `Priority: ${triage.priority} | Component: ${triage.component}`,
       `Root Cause: ${rootCause.root_cause_category}`,
       `Hypothesis: ${rootCause.hypothesis}`,
@@ -202,31 +203,6 @@ export default function ResultsPanel({ analysis, onDownload, onCopy }) {
                 </ul>
               </div>
             )}
-
-            {/* Quick combined log + triage facts */}
-            <div className="card inner-card" style={{ marginTop: '1rem', padding: '1.25rem' }}>
-              <h4 style={{ marginBottom: '0.75rem' }}>Combined Triage &amp; Log Analysis</h4>
-              <table className="details-table">
-                <tbody>
-                  <tr>
-                    <td><strong>Primary Exception</strong></td>
-                    <td><code>{safe(logs.exception_type, 'No exception detected')}</code></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Failure Point</strong></td>
-                    <td><code>{safe(logs.failure_point, 'Not determined')}</code></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Affected Code Path</strong></td>
-                    <td><code>{safe(logs.affected_code_path, 'Not identified')}</code></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Triage Reasoning</strong></td>
-                    <td style={{ fontStyle: 'italic', opacity: 0.9 }}>{safe(triage.reasoning, 'Classification based on severity and component patterns.')}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </div>
         )}
 
@@ -701,6 +677,9 @@ export default function ResultsPanel({ analysis, onDownload, onCopy }) {
                 </ul>
               </div>
             )}
+
+            {/* ── One-Click Self-Healing PR Generator ── */}
+            {showSelfHealPR && <SelfHealingPR analysis={analysis} />}
           </div>
         )}
 

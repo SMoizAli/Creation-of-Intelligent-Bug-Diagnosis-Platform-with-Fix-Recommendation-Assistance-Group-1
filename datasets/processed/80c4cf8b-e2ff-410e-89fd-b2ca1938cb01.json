@@ -1,0 +1,51 @@
+{
+  "analysis_id": "80c4cf8b-e2ff-410e-89fd-b2ca1938cb01",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "Act as a Principal AI Full-Stack Architect. I need to update my React frontend and backend integration for my \"Agentic Defect Analysis System\" (ASBA).\nCurrently, my file-upload and text-paste pipeline successfully runs the multi-agent workflow (Triage, Log Parser, Vector RAG Matcher, and Remediation). I need you to build the complete, functional code so that my new features—specifically the conversational \"Ask RAG AI\" drawer and the Voice-Activated Mic button—fully execute this exact same end-to-end bug analysis workflow.\nPlease generate the complete production-ready code implementation for:\n1. Unified Bug Ingestion Handler (`handleUnifiedBugSubmission(inputData)`):\n- Whether the input comes from a pasted text file, a PDF upload, a typed chat prompt in the \"Ask RAG AI\" drawer, or a spoken voice transcription from the microphone, it must route through the exact same parsing and agentic pipeline.\n- It should extract error traces, trigger vector similarity search against our historical JSON/ChromaDB knowledge base, and render the structured findings on the dashboard.\n2. Interactive \"Ask RAG AI\" Drawer & Voice Integration Component:\n- A fully styled slide-out or modal drawer titled \"Ask RAG AI Assistant\".\n- Includes a text input field AND a working Web Speech API microphone button (`webkitSpeechRecognition`).\n- When an engineer types a bug query or speaks into the mic (e.g., \"Have we seen an AttributeError in processor.py before?\"), it converts speech to text, sends it to the RAG backend, and streams/renders the exact matching historical bugs, root causes, and fix recommendations right inside the drawer.\n3. Complete State Synchronization:\n- Ensure that interacting with the AI assistant or voice query dynamically updates the main dashboard's active findings and control room state seamlessly without throwing errors.\nProvide clean, modular, and fully written-out React component logic with dark-mode glassmorphic styling matching my existing enterprise dashboard aesthetic.",
+  "triage": {
+    "priority": "high",
+    "component": "frontend",
+    "summary": "Act as a Principal AI Full-Stack Architect. I need to update my React frontend and backend integration for my \"Agentic Defect Analysis System\" (ASBA).\nCurrently, my file-upload and text-paste pipeline...",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "frontend-team",
+    "business_impact": "Potential service degradation in frontend component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 3,
+    "error_samples": [
+      "error",
+      "Error",
+      "error"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "error",
+      "Error",
+      "error"
+    ],
+    "warnings": [],
+    "exception_type": "SSLHandshakeException",
+    "failure_point": "unknown",
+    "affected_code_path": "processor.py",
+    "exceptions": [
+      "AttributeError"
+    ],
+    "file_names": [
+      "processor.py"
+    ],
+    "line_numbers": [],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-12T16:12:35.692373Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: frontend | Root Cause: unknown | Risk: high | Confidence: 0.57",
+  "overall_confidence": 0.57
+}

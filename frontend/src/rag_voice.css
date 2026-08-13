@@ -1,0 +1,408 @@
+
+/* ==========================================================================
+   RAG ASSISTANT v2 — VOICE, MIC, PIPELINE TRACKER, RESULT CARD
+   ========================================================================== */
+
+/* ── Capability strip ───────────────────────────────────── */
+.rag-capability-strip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(0,0,0,0.25);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 0.5rem 1.25rem;
+  flex-shrink: 0;
+}
+.rag-cap-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+.rag-cap-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+/* ── Header badges ──────────────────────────────────────── */
+.rag-header-badges {
+  display: flex;
+  gap: 0.35rem;
+}
+.rag-hbadge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.2);
+  color: #a78bfa;
+  white-space: nowrap;
+}
+
+/* ── Message source badges ──────────────────────────────── */
+.msg-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.04em;
+}
+.msg-source-badge.voice {
+  background: rgba(239,68,68,0.12);
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+.msg-source-badge.pipeline {
+  background: rgba(251,146,60,0.12);
+  color: #fb923c;
+  border: 1px solid rgba(251,146,60,0.2);
+}
+
+/* ── Input wrapper (relative for hint overlay) ──────────── */
+.rag-input-wrapper {
+  flex: 1;
+  position: relative;
+}
+.rag-input-hint {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: fadeIn 0.2s ease;
+}
+.rag-input-hint .hint-pipeline {
+  color: #fb923c;
+  background: rgba(251,146,60,0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(251,146,60,0.2);
+}
+.rag-input-hint .hint-rag {
+  color: #38bdf8;
+  background: rgba(56,189,248,0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(56,189,248,0.15);
+}
+
+/* ── Mic Button ─────────────────────────────────────────── */
+.rag-mic-btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(167,139,250,0.3);
+  background: rgba(167,139,250,0.08);
+  color: #a78bfa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  overflow: visible;
+}
+.rag-mic-btn:hover:not(.unsupported) {
+  border-color: rgba(167,139,250,0.6);
+  background: rgba(167,139,250,0.15);
+  transform: scale(1.05);
+}
+.rag-mic-btn.unsupported {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.rag-mic-btn.listening {
+  background: rgba(239,68,68,0.12);
+  border-color: #ef4444;
+  color: #ef4444;
+  animation: micPulse 1.2s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+}
+.mic-icon { font-size: 1.1rem; position: relative; z-index: 1; }
+
+/* Mic ripple rings */
+.mic-ripple {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(239,68,68,0.5);
+  animation: micRipple 1.8s ease-out infinite;
+  pointer-events: none;
+}
+.mic-ripple-2 { inset: -12px; animation-delay: 0.4s; border-color: rgba(239,68,68,0.3); }
+.mic-ripple-3 { inset: -18px; animation-delay: 0.8s; border-color: rgba(239,68,68,0.15); }
+@keyframes micRipple {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+/* ── Voice Status Bar ───────────────────────────────────── */
+.rag-voice-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  animation: slideUp 0.2s ease-out;
+}
+.rag-voice-status.listening {
+  background: rgba(239,68,68,0.06);
+  border-top: 1px solid rgba(239,68,68,0.15);
+  color: #f87171;
+}
+.rag-voice-status.error {
+  background: rgba(245,158,11,0.06);
+  border-top: 1px solid rgba(245,158,11,0.15);
+  color: #f59e0b;
+}
+.voice-interim {
+  color: rgba(255,255,255,0.6);
+  font-weight: 400;
+  font-style: italic;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Voice waveform bars */
+.voice-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.voice-bar {
+  width: 3px;
+  background: #ef4444;
+  border-radius: 2px;
+  animation: voiceBar 0.6s ease-in-out infinite alternate;
+  height: 8px;
+}
+.voice-bar:nth-child(1) { animation-duration: 0.5s; }
+.voice-bar:nth-child(2) { animation-duration: 0.7s; }
+.voice-bar:nth-child(3) { animation-duration: 0.4s; }
+.voice-bar:nth-child(4) { animation-duration: 0.65s; }
+.voice-bar:nth-child(5) { animation-duration: 0.55s; }
+@keyframes voiceBar {
+  from { height: 4px; opacity: 0.4; }
+  to { height: 18px; opacity: 1; }
+}
+
+/* ── Mini Pipeline Tracker (inside drawer) ──────────────── */
+.rag-mini-pipeline {
+  background: linear-gradient(135deg, rgba(251,146,60,0.06), rgba(167,139,250,0.04));
+  border: 1px solid rgba(251,146,60,0.2);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  width: 100%;
+  animation: bubbleIn 0.25s ease-out;
+}
+.rmp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.rmp-icon { font-size: 1rem; color: #fb923c; animation: spin 1.5s linear infinite; }
+.rmp-label { flex: 1; font-size: 0.82rem; font-weight: 700; color: #fb923c; }
+.rmp-pct { font-size: 0.82rem; font-weight: 800; color: #fb923c; font-variant-numeric: tabular-nums; }
+.rmp-track { width: 100%; height: 4px; background: rgba(251,146,60,0.1); border-radius: 2px; margin-bottom: 0.5rem; overflow: hidden; }
+.rmp-fill { height: 100%; background: linear-gradient(90deg, #fb923c, #f43f5e); border-radius: 2px; transition: width 0.4s ease; }
+.rmp-stage { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.75rem; font-style: italic; }
+.rmp-agents { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.rmp-agent-chip {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+  transition: all 0.3s;
+}
+.rmp-agent-chip.active {
+  background: rgba(251,146,60,0.12);
+  border-color: rgba(251,146,60,0.3);
+  color: #fb923c;
+  animation: badgePulse 1.2s ease-in-out infinite;
+}
+.rmp-agent-chip.done {
+  background: rgba(16,185,129,0.10);
+  border-color: rgba(16,185,129,0.25);
+  color: #10b981;
+}
+
+/* ── Pipeline Result Card (inside drawer after pipeline run) */
+.rag-pipeline-result-card {
+  background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(56,189,248,0.04));
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 14px;
+  padding: 1.25rem;
+  width: 100%;
+  animation: bubbleIn 0.3s ease-out;
+}
+.rpr-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.rpr-icon { font-size: 1.4rem; flex-shrink: 0; }
+.rpr-title { display: block; font-size: 0.95rem; font-weight: 800; color: #10b981; margin-bottom: 0.2rem; }
+.rpr-sub { font-size: 0.72rem; color: var(--text-secondary); }
+.badge-priority {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  letter-spacing: 0.06em;
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.badge-priority.critical { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+.badge-priority.high     { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.badge-priority.medium   { background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+.badge-priority.low      { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+
+.rpr-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+.rpr-metric {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.rpr-metric-label { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+.rpr-metric-val { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
+
+.rpr-hypothesis {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid rgba(56,189,248,0.4);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1rem;
+}
+
+.rpr-view-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #10b981, #38bdf8);
+  border: none;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+}
+.rpr-view-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(16,185,129,0.45);
+}
+
+/* ── "Run Full Pipeline" button inside chat bubble ──────── */
+.rag-run-pipeline-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(251,146,60,0.1), rgba(167,139,250,0.08));
+  border: 1px solid rgba(251,146,60,0.3);
+  color: #fb923c;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.9rem;
+  transition: all 0.2s;
+  text-align: center;
+}
+.rag-run-pipeline-btn:hover {
+  background: linear-gradient(135deg, rgba(251,146,60,0.18), rgba(167,139,250,0.12));
+  border-color: rgba(251,146,60,0.5);
+  transform: translateY(-1px);
+}
+
+/* ── Ticket similarity bar (improved) ───────────────────── */
+.rag-sim-bar-track {
+  width: 48px;
+  height: 4px;
+  background: rgba(167,139,250,0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.rag-sim-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a78bfa, #38bdf8);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+.rag-sim-val {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #a78bfa;
+  min-width: 36px;
+}
+
+/* ── Pipeline-triggered analysis view label ─────────────── */
+.analysis-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  margin-left: 0.75rem;
+  vertical-align: middle;
+}
+.analysis-source-badge.voice {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.2);
+  color: #f87171;
+}
+.analysis-source-badge.chat {
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.2);
+  color: #a78bfa;
+}
+
+/* ── Utility: slideUp animation (used by several components) */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,45 @@
+{
+  "analysis_id": "337ec127-35e4-435b-8d41-b83b437e747b",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "Database is locked error on sqlite3. OperationalError: database is locked when writing to places.sqlite.",
+  "triage": {
+    "priority": "high",
+    "component": "SQLite Persistence Layer",
+    "summary": "Database is locked error on sqlite3. OperationalError: database is locked when writing to places.sqlite.",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "SQLite Persistence Layer-team",
+    "business_impact": "Potential service degradation in SQLite Persistence Layer component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "error"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "error"
+    ],
+    "warnings": [],
+    "exception_type": "sqlite3.OperationalError",
+    "failure_point": "writing to places.sqlite",
+    "affected_code_path": "storage/database/sqlite_conn.py",
+    "exceptions": [
+      "OperationalError"
+    ],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-07T14:59:04.895033Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: SQLite Persistence Layer | Root Cause: unknown | Risk: high | Confidence: 0.75",
+  "overall_confidence": 0.75
+}

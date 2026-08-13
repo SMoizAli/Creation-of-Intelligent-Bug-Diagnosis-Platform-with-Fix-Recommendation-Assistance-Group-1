@@ -1,0 +1,57 @@
+{
+  "analysis_id": "f9b882d3-a9d8-45ba-9f92-96c3eb8ecf01",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "ERROR: NullPointerException in UserService.getProfile()\nat com.example.UserService.getProfile(UserService.java:42)\nHTTP 500 Internal Server Error\nTimestamp: 2024-01-15T10:30:00Z\nCritical production outage affecting login flow.",
+  "triage": {
+    "priority": "critical",
+    "component": "unknown",
+    "summary": "ERROR: NullPointerException in UserService.getProfile()\nat com.example.UserService.getProfile(UserService.java:42)\nHTTP 500 Internal Server Error\nTimestamp: 2024-01-15T10:30:00Z\nCritical production ou...",
+    "tags": [],
+    "severity_score": 9,
+    "recommended_assignee_team": "unknown-team",
+    "business_impact": "Unknown system impact.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 2,
+    "error_samples": [
+      "ERROR",
+      "Error"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at com.example.UserService.getProfile(UserService.java:42)"
+    ],
+    "timestamps_found": [
+      "2024-01-15T10:30:00"
+    ],
+    "http_status_codes": [
+      500
+    ],
+    "log_format": "structured_log",
+    "detected_errors": [
+      "ERROR",
+      "Error"
+    ],
+    "warnings": [],
+    "exception_type": "NullPointerException",
+    "failure_point": "getProfile in UserService.java:42",
+    "affected_code_path": "com.example.UserService",
+    "exceptions": [
+      "NullPointerException"
+    ],
+    "file_names": [
+      "UserService.java"
+    ],
+    "line_numbers": [
+      42
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-05T14:38:14.724584Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: unknown | Root Cause: code_defect | Risk: critical | Confidence: 0.67",
+  "overall_confidence": 0.67
+}

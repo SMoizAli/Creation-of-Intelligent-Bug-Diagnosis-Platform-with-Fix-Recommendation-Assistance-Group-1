@@ -8,10 +8,20 @@ import AnalyticsPanel from './components/AnalyticsPanel';
 import HealthPanel from './components/HealthPanel';
 import RecommendationPanel from './components/RecommendationPanel';
 import ActivityPanel from './components/ActivityPanel';
+// import AgentControlRoom from './components/AgentControlRoom'; // Hidden — commented for reference
+// import RAGAssistant from './components/RAGAssistant'; // Removed — Ask RAG feature disabled
+
+import PredictiveRiskCard from './components/PredictiveRiskCard';
+import KnowledgeBasePanel from './components/KnowledgeBasePanel';
+
+import Milestone4DemoPanel from './components/Milestone4DemoPanel';
 
 import { useSystemStatus } from './hooks/useSystemStatus';
+import { useUnifiedBugIngestion } from './hooks/useUnifiedBugIngestion';
 import { submitBug, analyzeBug, getAnalysis } from './services/api';
 import './App.css';
+import './features.css';
+import './rag_voice.css';
 
 export default function App() {
   const [activeView, setActiveView] = useState('dashboard');
@@ -21,7 +31,20 @@ export default function App() {
   const [notification, setNotification] = useState(null);
   const [theme, setTheme] = useState('dark');
   const [searchQuery, setSearchQuery] = useState('');
-  
+  // RAG state removed — Ask RAG feature disabled
+  // const [ragOpen, setRagOpen] = useState(false);
+  // const [ragSource, setRagSource] = useState('chat');
+
+  // ── Shared state: last completed analysis → feeds KB panel ──────────────
+  const [lastAnalyzedBug, setLastAnalyzedBug] = useState(() => {
+    // Persist across page navigation via sessionStorage
+    try {
+      const stored = sessionStorage.getItem('asba_last_analyzed_bug');
+      return stored ? JSON.parse(stored) : null;
+    } catch { return null; }
+  });
+
+
   // Custom states for timeline simulation during execution
   const [timelineIndex, setTimelineIndex] = useState(-1);
   const [activeAgent, setActiveAgent] = useState('');
@@ -54,6 +77,23 @@ export default function App() {
     }
   };
 
+  // ── Unified pipeline stage ticker (shared by upload AND rag/voice paths) ──
+  const handleStageChange = (idx, label) => {
+    setTimelineIndex(idx);
+    setActiveAgent(label);
+  };
+
+  // ── RAG handlers removed — Ask RAG feature disabled ────────────────────
+  // const handleRagAnalysisReady = ...
+  // const handleRagPipelineStart = ...
+
+  // Helper: persist a completed analysis as the "last analyzed bug" for KB sync
+  const persistLastAnalyzedBug = (analysisObj, bugObj) => {
+    const record = { analysis: analysisObj, bug: bugObj, analyzedAt: new Date().toISOString() };
+    setLastAnalyzedBug(record);
+    try { sessionStorage.setItem('asba_last_analyzed_bug', JSON.stringify(record)); } catch {}
+  };
+
   // Run the multi-agent analysis timeline
   const handleInitiateAnalysis = async () => {
     if (!submittedBug) return;
@@ -80,25 +120,21 @@ export default function App() {
       } else {
         clearInterval(interval);
       }
-    }, 120);
+    }, 400);
 
     try {
       const analyzeResult = await analyzeBug(submittedBug.id);
       clearInterval(interval);
-      // Enrich analysis with bug file metadata for UI display
-      const enrichedAnalysis = {
-        ...analyzeResult.analysis,
-        file_name: submittedBug.file_name || analyzeResult.analysis?.file_name,
-        source_file: submittedBug.file_name || 'pasted_text',
-        title: submittedBug.title || analyzeResult.analysis?.title,
-      };
-      setAnalysis(enrichedAnalysis);
+      setAnalysis(analyzeResult.analysis);
       setUiState('completed');
       setTimelineIndex(stages.length);
-      
-      // Auto redirect to results immediately
-      setActiveView('results');
-      setNotification('Enterprise multi-agent analysis finished successfully.');
+      // ── Capture into shared KB-sync state ───────────────────────────────
+      persistLastAnalyzedBug(analyzeResult.analysis, submittedBug);
+      // Auto redirect to results after a short delay
+      setTimeout(() => {
+        setActiveView('results');
+        setNotification('Enterprise multi-agent analysis finished successfully.');
+      }, 500);
     } catch (err) {
       clearInterval(interval);
       setUiState('error');
@@ -111,9 +147,7 @@ export default function App() {
     setUiState('loading_history');
     try {
       const result = await getAnalysis(analysisId);
-      // API returns the object directly for GET /analysis/:id
-      const analysisData = result?.analysis || result;
-      setAnalysis(analysisData);
+      setAnalysis(result);
       setUiState('completed');
       setActiveView('results');
       setNotification('Historical analysis record loaded.');
@@ -152,13 +186,24 @@ export default function App() {
               {/* Status and Action panels */}
               <div className="quick-access-section">
                 <div className="card start-analysis-cta">
-                  <h3>AI Smart Bug Analyzer</h3>
+                  <h3>Intelligent Bug Diagnosis</h3>
                   <p>Upload files or logs to scan for errors, verify duplicate matches, and recommend remediations.</p>
-                  <button className="btn btn-primary" onClick={() => setActiveView('upload')}>
-                    Open Bug Upload Center
-                  </button>
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+                    <button className="btn btn-primary" onClick={() => setActiveView('upload')}>
+                      Open Bug Upload Center
+                    </button>
+                  {/* 🤖 Agent Control Room button hidden — commented for reference
+                    <button className="btn btn-secondary" onClick={() => setActiveView('controlroom')}>
+                      🤖 Launch Agent Control Room
+                    </button>
+                  */}
+
+                  </div>
                 </div>
               </div>
+
+              {/* Crystal Ball — Predictive Risk Forecasting */}
+              <PredictiveRiskCard />
 
               <RecommendationPanel />
             </div>
@@ -169,6 +214,10 @@ export default function App() {
             </div>
           </div>
         );
+
+      // case 'controlroom':  // Hidden — Agent Control Room commented out
+      //   return <AgentControlRoom />;
+
 
       case 'upload':
         return (
@@ -183,7 +232,7 @@ export default function App() {
                   <button className="btn btn-primary" onClick={handleInitiateAnalysis}>
                     Initiate Enterprise AI Analysis
                   </button>
-                </div>
+                </div>     
                 
                 <table className="preview-meta-table">
                   <tbody>
@@ -258,6 +307,8 @@ export default function App() {
             analysis={analysis}
             onCopy={() => setNotification('Findings copied to clipboard.')}
             onDownload={() => setNotification('Report download requested.')}
+            showSelfHealPR={true}
+            onSyncToKB={() => setActiveView('knowledgebase')}
           />
         );
 
@@ -269,6 +320,17 @@ export default function App() {
 
       case 'analytics':
         return <AnalyticsPanel />;
+
+      case 'knowledgebase':
+        return (
+          <KnowledgeBasePanel
+            onSyncToast={(msg) => setNotification(msg)}
+            lastAnalyzedBug={lastAnalyzedBug}
+          />
+        );
+
+      case 'm4demo':
+        return <Milestone4DemoPanel />;
 
       case 'health':
         return <HealthPanel status={status} />;
@@ -286,8 +348,8 @@ export default function App() {
         {/* Top Navbar */}
         <header className="top-bar">
           <div className="brand-title">
-            <h2>{activeView.toUpperCase()}</h2>
-            <span className="sub-title-text">AI-Smart-Bug-Analyzer-And-Fix-Advisor Enterprise Dashboard</span>
+            <h2>{activeView === 'controlroom' ? 'CONTROL ROOM' : activeView.toUpperCase()}</h2>
+            <span className="sub-title-text">Intelligent Bug Diagnosis Dashboard</span>
           </div>
 
           <div className="top-actions">
@@ -323,6 +385,17 @@ export default function App() {
           {renderContent()}
         </div>
       </main>
+
+      {/* RAG Assistant Drawer — REMOVED (Ask RAG feature disabled) */}
+      {/* <RAGAssistant isOpen={ragOpen} onClose={() => setRagOpen(false)}
+          onAnalysisReady={handleRagAnalysisReady}
+          onPipelineStart={handleRagPipelineStart} /> */}
+
+      {/* Floating RAG Button — REMOVED */}
+      {/* <button className="rag-fab-btn" onClick={() => setRagOpen(true)}
+          id="rag-fab-btn" title="Ask Agentic RAG">🧠
+          <span className="rag-fab-tooltip">Ask Agentic RAG</span>
+        </button> */}
     </div>
   );
 }

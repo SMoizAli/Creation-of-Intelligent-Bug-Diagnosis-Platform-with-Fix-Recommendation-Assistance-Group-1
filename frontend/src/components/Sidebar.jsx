@@ -1,13 +1,16 @@
 import React from 'react';
 
 const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Command Center', icon: '◫' },
-  { id: 'upload', label: 'Bug Upload', icon: '↑' },
-  { id: 'results', label: 'Analysis Findings', icon: '✓' },
-  { id: 'history', label: 'History Logs', icon: '☰' },
-  { id: 'analytics', label: 'Analytics Insights', icon: '📈' },
-  { id: 'health', label: 'System Health', icon: '♥' },
-  { id: 'settings', label: 'Settings Configuration', icon: '⚙' },
+  { id: 'dashboard',     label: 'Command Center',       icon: '◫'  },
+  { id: 'upload',        label: 'Bug Upload',            icon: '↑'  },
+  // { id: 'controlroom',   label: 'Agent Control Room',    icon: '🤖' },  // Hidden — commented for reference
+  { id: 'results',       label: 'Analysis Findings',     icon: '✓'  },
+  { id: 'history',       label: 'History Logs',          icon: '☰'  },
+  { id: 'analytics',     label: 'Analytics Insights',    icon: '📈' },
+  { id: 'health',        label: 'System Health',         icon: '♥'  },
+  { id: 'knowledgebase', label: 'Knowledge Base',        icon: '📚' },
+  { id: 'm4demo',        label: 'End-End Debugging',      icon: '🧪' },
+  { id: 'settings',      label: 'Settings Configuration',icon: '⚙'  },
 ];
 
 export default function Sidebar({ activeView, onNavigate, systemStatus }) {
@@ -21,8 +24,8 @@ export default function Sidebar({ activeView, onNavigate, systemStatus }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <h1>AI-Smart-Bug-Analyzer-And-Fix-Advisor Enterprise</h1>
-        <p>AI Smart Bug Analyzer</p>
+        <h1>Creation of Intelligent Bug Diagnosis Platform with Fix Recommendation Assistance</h1>
+        <p>Intelligent Bug Diagnosis</p>
       </div>
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => (

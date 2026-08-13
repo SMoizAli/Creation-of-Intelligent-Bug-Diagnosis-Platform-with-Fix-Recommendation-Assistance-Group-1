@@ -1,0 +1,55 @@
+{
+  "analysis_id": "887cd5d1-9b44-42ff-a212-7b4a3aab485d",
+  "source_file": "sample_bug_report.pdf",
+  "title": "Bug Report ",
+  "raw_input": "Bug Report: Login Failure After Password Reset\nSummary: Users cannot log in after resetting their password.\nSteps:\n1. Open app\n2. Reset password\n3. Login with new password\nExpected: Login succeeds.\nActual: HTTP 500 Internal Server Error displayed.\nLog Snippet:\nERROR AuthenticationService - NullPointerException at\nvalidateToken(TokenService.java:87)\nWARN Token cache miss for userId=1245\nERROR JWT signature verification failed\nEnvironment: Java 17, Spring Boot 3.2, MySQL 8.0",
+  "triage": {
+    "priority": "high",
+    "component": "authentication",
+    "summary": "Bug Report: Login Failure After Password Reset\nSummary: Users cannot log in after resetting their password.\nSteps:\n1. Open app\n2. Reset password\n3. Login with new password\nExpected: Login succeeds.\nAc...",
+    "tags": [],
+    "severity_score": 7,
+    "recommended_assignee_team": "authentication-team",
+    "business_impact": "Potential service degradation in authentication component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 7."
+  },
+  "log_analysis": {
+    "error_count": 3,
+    "error_samples": [
+      "Error",
+      "ERROR",
+      "ERROR"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [
+      500
+    ],
+    "log_format": "plain_text",
+    "detected_errors": [
+      "Error",
+      "ERROR",
+      "ERROR"
+    ],
+    "warnings": [],
+    "exception_type": "NullPointerException",
+    "failure_point": "Line 87",
+    "affected_code_path": "TokenService.java",
+    "exceptions": [
+      "NullPointerException"
+    ],
+    "file_names": [
+      "TokenService.java"
+    ],
+    "line_numbers": [
+      87
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-12T17:45:45.553515Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: high | Component: authentication | Root Cause: integration | Risk: critical | Confidence: 0.8",
+  "overall_confidence": 0.8
+}

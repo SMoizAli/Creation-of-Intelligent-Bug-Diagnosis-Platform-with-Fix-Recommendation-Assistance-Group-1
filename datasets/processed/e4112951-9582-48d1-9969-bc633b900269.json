@@ -1,0 +1,43 @@
+{
+  "analysis_id": "e4112951-9582-48d1-9969-bc633b900269",
+  "source_file": "Bug ID 1.pdf",
+  "title": "Bug Report ",
+  "raw_input": "Bug ID: BUG-101\nTitle: Application crashes during image upload",
+  "triage": {
+    "priority": "critical",
+    "component": "unknown",
+    "summary": "Bug ID: BUG-101\nTitle: Application crashes during image upload",
+    "tags": [
+      "crash"
+    ],
+    "severity_score": 9,
+    "recommended_assignee_team": "unknown-team",
+    "business_impact": "Unknown system impact.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 1,
+    "error_samples": [
+      "Bug ID: BUG-101\nTitle: Application crashes during image upload"
+    ],
+    "has_stack_trace": false,
+    "stack_trace_lines": [],
+    "timestamps_found": [],
+    "http_status_codes": [],
+    "log_format": "plain_text",
+    "detected_errors": [],
+    "warnings": [],
+    "exception_type": "UnknownException",
+    "failure_point": "unknown",
+    "affected_code_path": "unknown",
+    "exceptions": [],
+    "file_names": [],
+    "line_numbers": [],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-05T14:05:04.701900Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: unknown | Root Cause: unknown | Risk: critical | Confidence: 0.75",
+  "overall_confidence": 0.75
+}

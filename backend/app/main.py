@@ -6,6 +6,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
+from app.api.analytics import analytics_router
+from app.api.kb_feedback import kb_router
 from app.config.settings import get_settings
 from app.utils.exceptions import register_exception_handlers
 from app.utils.logger import get_logger, setup_logging
@@ -68,6 +70,8 @@ def create_app() -> FastAPI:
 
     register_exception_handlers(app)
     app.include_router(router, prefix=settings.api_prefix, tags=["AI-Smart-Bug-Analyzer-And-Fix-Advisor"])
+    app.include_router(analytics_router, prefix=settings.api_prefix)
+    app.include_router(kb_router, prefix=settings.api_prefix)
 
     @app.get("/")
     async def root():

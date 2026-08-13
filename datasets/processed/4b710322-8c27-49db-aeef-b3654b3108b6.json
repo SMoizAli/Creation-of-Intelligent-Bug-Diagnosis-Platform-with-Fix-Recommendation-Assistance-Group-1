@@ -1,0 +1,67 @@
+{
+  "analysis_id": "4b710322-8c27-49db-aeef-b3654b3108b6",
+  "source_file": "pasted_text",
+  "title": "Bug Report ",
+  "raw_input": "CRITICAL EXCEPTION IN PRODUCTION MODULE: EnterpriseBillingEngine\nTimestamp: 2026-08-12T22:30:15.842Z\nService: billing-transaction-gateway-v4\nEnvironment: production-us-east-1\nError Type: DistributedLockTimeoutException / PostgreSQLConnectionPoolExhausted\nStack Trace:\nat com.enterprise.billing.lock.RedisDistributedLock.acquireLock(RedisDistributedLock.java:114)\nat com.enterprise.billing.core.TransactionExecutor.processPayment(TransactionExecutor.java:78)\nat com.enterprise.billing.api.BillingController.executeBatch(BillingController.java:52)\nCaused by: org.postgresql.util.PSQLException: FATAL: sorry, too many clients already. Max connections (200) reached. Active connections: 200. Waiting threads: 340.\nSystem Telemetry at Failure:\n- CPU Usage: 98.5%\n- Memory Usage: 91.2%\n- Active Worker Threads: 1024\n- Network I/O: 4.2 GB/s",
+  "triage": {
+    "priority": "critical",
+    "component": "payment",
+    "summary": "CRITICAL EXCEPTION IN PRODUCTION MODULE: EnterpriseBillingEngine\nTimestamp: 2026-08-12T22:30:15.842Z\nService: billing-transaction-gateway-v4\nEnvironment: production-us-east-1\nError Type: DistributedLo...",
+    "tags": [
+      "timeout",
+      "memory"
+    ],
+    "severity_score": 9,
+    "recommended_assignee_team": "payment-team",
+    "business_impact": "Potential service degradation in payment component.",
+    "confidence": 0.0,
+    "reasoning": "Heuristics triggered: matched keyword patterns in content. Severity set to 9."
+  },
+  "log_analysis": {
+    "error_count": 3,
+    "error_samples": [
+      "EXCEPTION",
+      "Error",
+      "Exception"
+    ],
+    "has_stack_trace": true,
+    "stack_trace_lines": [
+      "at com.enterprise.billing.lock.RedisDistributedLock.acquireLock(RedisDistributedLock.java:114)",
+      "at com.enterprise.billing.core.TransactionExecutor.processPayment(TransactionExecutor.java:78)",
+      "at com.enterprise.billing.api.BillingController.executeBatch(BillingController.java:52)"
+    ],
+    "timestamps_found": [
+      "2026-08-12T22:30:15"
+    ],
+    "http_status_codes": [],
+    "log_format": "structured_log",
+    "detected_errors": [
+      "EXCEPTION",
+      "Error",
+      "Exception"
+    ],
+    "warnings": [],
+    "exception_type": "ConnectionPoolTimeoutException",
+    "failure_point": "acquireLock in RedisDistributedLock.java:114",
+    "affected_code_path": "com.enterprise.billing.lock.RedisDistributedLock",
+    "exceptions": [
+      "DistributedLockTimeoutException",
+      "PSQLException"
+    ],
+    "file_names": [
+      "RedisDistributedLock.java",
+      "TransactionExecutor.java",
+      "BillingController.java"
+    ],
+    "line_numbers": [
+      114,
+      78,
+      52
+    ],
+    "confidence": 0.0
+  },
+  "processed_at": "2026-08-12T17:17:48.848346Z",
+  "pipeline_version": "milestone-2",
+  "overall_summary": "Priority: critical | Component: payment | Root Cause: code_defect | Risk: critical | Confidence: 0.7",
+  "overall_confidence": 0.7
+}

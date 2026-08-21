@@ -28,21 +28,8 @@ async def lifespan(app: FastAPI):
     except Exception as exc:
         logger.error("Failed to initialize database tables: %s", exc)
 
-    try:
-        from app.rag.embeddings import EmbeddingService
-
-        EmbeddingService()
-        logger.info("Embedding model initialized: %s", settings.embedding_model)
-    except Exception as exc:
-        logger.warning("Embedding model not loaded at startup: %s", exc)
-
-    try:
-        from app.rag.vector_store import VectorStore
-
-        vs = VectorStore()
-        logger.info("ChromaDB initialized with %d documents", vs.document_count)
-    except Exception as exc:
-        logger.warning("ChromaDB not available at startup: %s", exc)
+    # Skipped heavy model pre-load at startup to stay under 512MB RAM limit
+    logger.info("Skipping heavy model pre-load at startup to stay under 512MB RAM limit.")
 
     yield
     logger.info("Shutting down AI-Smart-Bug-Analyzer-And-Fix-Advisor")

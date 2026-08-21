@@ -71,7 +71,7 @@ desktop.ini
 
 # Model cache
 .cache/
-models/
+# models/
 sentence_transformers/
 
 # Jupyter

@@ -12,13 +12,14 @@ logger = get_logger("rag.embeddings")
 
 @lru_cache(maxsize=1)
 def _load_model():
-    """Lazy-load the embedding model (cached singleton)."""
+    """Lazy-load the embedding model (cached singleton) with memory safeguards."""
     settings = get_settings()
     try:
         from sentence_transformers import SentenceTransformer
 
         logger.info("Loading embedding model: %s", settings.embedding_model)
-        return SentenceTransformer(settings.embedding_model)
+        # Force CPU usage to save memory overhead and prevent CUDA/GPU initialization crashes on Render
+        return SentenceTransformer(settings.embedding_model, device="cpu")
     except Exception as exc:
         logger.error("Failed to load embedding model: %s", exc)
         raise EmbeddingError(
@@ -56,7 +57,7 @@ class EmbeddingService:
         if not texts:
             return []
         try:
-            embeddings = self.model.encode(texts, show_progress_bar=False)
+            embeddings = self.model.encode(texts, show_progress_bar=False, convert_to_numpy=True)
             return embeddings.tolist()
         except Exception as exc:
             logger.error("Embedding generation failed: %s", exc)

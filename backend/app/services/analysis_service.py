@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Optional
 
-from app.models import Analysis, AnalysisStatus, Bug, BugPriority, BugStatus, HistoryEntry
+from app.model import Analysis, AnalysisStatus, Bug, BugPriority, BugStatus, HistoryEntry
 from app.services.bug_service import BugService
 from app.services.store import store
 from app.utils.exceptions import NotFoundError

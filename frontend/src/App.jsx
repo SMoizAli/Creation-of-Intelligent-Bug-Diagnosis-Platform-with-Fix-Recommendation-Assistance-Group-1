@@ -120,10 +120,10 @@ export default function App() {
   };
 
   // File Upload & Automatic Pipeline Transition
-  const handleUploadComplete = async ({ content, file }) => {
+  const handleUploadComplete = async ({ content, title, file, file_name }) => {
     setUiState('uploading');
     try {
-      const result = await submitBug({ content, file });
+      const result = await submitBug({ content, title, file, file_name });
       // Safely grab the bug object whether it's nested or returned directly
       const bugData = result.bug || result;
       setSubmittedBug(bugData);

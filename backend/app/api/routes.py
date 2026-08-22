@@ -88,6 +88,7 @@ async def submit_bug(
     analysis_service: AnalysisService = Depends(get_analysis_service),
     file: Optional[UploadFile] = File(None),
     title: Optional[str] = Form(None),
+    file_name: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
     content: Optional[str] = Form(None),
     component: Optional[str] = Form(None),
@@ -112,6 +113,7 @@ async def submit_bug(
             description=description,
             component=component,
             tags=tag_list,
+            file_name=file_name,
         )
     else:
         from app.utils.exceptions import ValidationError

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { extractTextFromFile } from '../utils/clientParser';
 
 const ALLOWED = ['.txt', '.log', '.json', '.xml', '.pdf', '.docx', '.csv', '.md'];
 const MAX_MB = 10;
@@ -37,12 +38,18 @@ export default function UploadCard({ onUploadComplete, disabled, uiState }) {
     setError(null);
     setFile(f);
     
-    // Auto submit to extract text preview
+    // Client-side extraction prevents low-memory server OOM crashes
     setLoading(true);
     try {
-      await onUploadComplete({ file: f });
+      const extractedText = await extractTextFromFile(f);
+      const cleanTitle = f.name.replace(/\.[^/.]+$/, '');
+      await onUploadComplete({
+        content: extractedText,
+        title: cleanTitle,
+        file_name: f.name,
+      });
     } catch (err) {
-      setError(err.message || "Failed to parse file.");
+      setError(err.message || "Failed to process file.");
     } finally {
       setLoading(false);
     }
@@ -52,7 +59,11 @@ export default function UploadCard({ onUploadComplete, disabled, uiState }) {
     if (!content.trim()) return;
     setLoading(true);
     try {
-      await onUploadComplete({ content: content.trim() });
+      await onUploadComplete({
+        content: content.trim(),
+        title: `Bug Report - ${new Date().toLocaleTimeString()}`,
+        file_name: 'Manual Text Submission'
+      });
     } catch (err) {
       setError(err.message || "Failed to submit text.");
     } finally {

@@ -97,7 +97,7 @@ export async function getStatus() {
   return request('/status');
 }
 
-export async function submitBug({ content, title, file }) {
+export async function submitBug({ content, title, file, file_name }) {
   const formData = new FormData();
   if (file) {
     formData.append('file', file);
@@ -107,6 +107,9 @@ export async function submitBug({ content, title, file }) {
   }
   if (title) {
     formData.append('title', title);
+  }
+  if (file_name) {
+    formData.append('file_name', file_name);
   }
   return request('/submit-bug', { method: 'POST', body: formData });
 }

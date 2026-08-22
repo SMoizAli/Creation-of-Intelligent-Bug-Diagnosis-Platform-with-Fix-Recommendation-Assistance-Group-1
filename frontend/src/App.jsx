@@ -63,13 +63,15 @@ export default function App() {
   }, [theme]);
 
   // File Upload Preview complete
-  const handleUploadComplete = async ({ content, file }) => {
+ const handleUploadComplete = async ({ content, file }) => {
     setUiState('uploading');
     try {
       const result = await submitBug({ content, file });
-      setSubmittedBug(result.bug);
+      // Safely grab the bug object whether it's nested or returned directly
+      const bugData = result.bug || result;
+      setSubmittedBug(bugData);
       setUiState('preview_ready');
-      setActiveView('upload'); // Stay on upload screen to show preview
+      setActiveView('upload');
       setNotification('Bug report parsed successfully. Ready for AI Analysis.');
     } catch (err) {
       setUiState('error');

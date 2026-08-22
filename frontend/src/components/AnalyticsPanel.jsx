@@ -262,30 +262,38 @@ export default function AnalyticsPanel() {
 
   /* ── Data prep ──────────────────────────────────────────────────────────── */
   const topComponents = data?.top_components || [
-    { component: 'PaymentGateway', count: 18 },
-    { component: 'AuthService', count: 14 },
-    { component: 'DataPipeline', count: 11 },
-    { component: 'DatabaseService', count: 9 },
-    { component: 'APIGateway', count: 7 },
-    { component: 'NotificationService', count: 6 },
+    { component: 'PaymentGateway / Checkout', count: 18 },
+    { component: 'SWT / UI Thread Runtime', count: 14 },
+    { component: 'SQLite Persistence Layer', count: 11 },
+    { component: 'Auth / OAuth Token Service', count: 9 },
+    { component: 'Jupyter Web Frontend', count: 7 },
+    { component: 'Network Socket Pool', count: 6 },
   ];
   const severityDist = data?.severity_distribution || [
-    { severity: 'critical', count: 12 },
-    { severity: 'high', count: 21 },
-    { severity: 'medium', count: 15 },
-    { severity: 'low', count: 7 },
+    { severity: 'Critical', count: 14 },
+    { severity: 'High', count: 22 },
+    { severity: 'Medium', count: 16 },
+    { severity: 'Low', count: 7 },
   ];
   const themes = data?.root_cause_themes || [
-    { theme: 'Connection Timeout', count: 9 },
-    { theme: 'Memory Exhaustion', count: 7 },
-    { theme: 'Race Condition', count: 6 },
-    { theme: 'Null Pointer', count: 5 },
-    { theme: 'Deadlock', count: 5 },
-    { theme: 'Token Expiry', count: 4 },
-    { theme: 'Schema Mismatch', count: 3 },
-    { theme: 'Rate Limiting', count: 3 },
-    { theme: 'OOM Error', count: 2 },
+    { theme: 'Null / Undefined Reference', count: 18 },
+    { theme: 'Database / Query Error', count: 14 },
+    { theme: 'Concurrency / Race Condition', count: 11 },
+    { theme: 'Network / Timeout', count: 9 },
+    { theme: 'Memory Issues', count: 7 },
   ];
+
+  const componentDetails = (data?.component_details && Object.keys(data.component_details).length > 0)
+    ? data.component_details
+    : COMPONENT_DETAILS;
+
+  const trendData = (data?.trend_data && data.trend_data.length > 0)
+    ? data.trend_data
+    : TREND_DATA;
+
+  const mttrData = (data?.mttr_data && data.mttr_data.length > 0)
+    ? data.mttr_data
+    : MTTR_DATA;
 
   const severityWithColours = severityDist.map(s => ({
     ...s, fill: SEVERITY_COLOURS[s.severity.toLowerCase()] || '#94a3b8',
@@ -293,16 +301,21 @@ export default function AnalyticsPanel() {
     value: s.count,
   }));
   const maxThemeCount = Math.max(...themes.map(t => t.count), 1);
-  const totalBugs = severityDist.reduce((a, s) => a + s.count, 0);
+  const totalBugs = data?.kpis?.total_bugs || severityDist.reduce((a, s) => a + s.count, 0);
+  const critCount = data?.kpis?.critical_count || severityDist.find(s=>s.severity.toLowerCase()==='critical')?.count || 0;
+  const avgMttr = data?.kpis?.avg_mttr_hours ? `${data.kpis.avg_mttr_hours}h` : '2.4h';
+  const topRiskComp = data?.kpis?.top_risk_component || 'PaymentGateway / Checkout';
+  const selfHealRate = data?.kpis?.self_heal_success_rate || '94%';
+  const duplicateRate = data?.kpis?.duplicate_rate || '28.5%';
 
   /* ── KPI values ─────────────────────────────────────────────────────────── */
   const kpis = [
-    { label: 'Total Defects', value: totalBugs, icon: '🐛', accent: '#38bdf8', sub: 'Last 30 days' },
-    { label: 'Critical Active', value: severityDist.find(s=>s.severity==='critical')?.count || 12, icon: '🔥', accent: '#f87171', sub: 'Needs immediate attention' },
-    { label: 'Avg MTTR', value: '3.0h', icon: '⏱', accent: '#c084fc', sub: '+12% from last week' },
-    { label: 'Hotspot Score', value: '94', icon: '🎯', accent: '#fb923c', sub: 'PaymentGateway leads' },
-    { label: 'Duplicate Rate', value: '33.3%', icon: '🔁', accent: '#34d399', sub: 'KB-matched duplicates' },
-    { label: 'Fix Success Rate', value: '87%', icon: '✅', accent: '#10b981', sub: 'Verified resolutions' },
+    { label: 'Total Defects', value: totalBugs, icon: '🐛', accent: '#38bdf8', sub: 'Analyzed in knowledge base' },
+    { label: 'Critical Active', value: critCount, icon: '🔥', accent: '#f87171', sub: 'Immediate triage required' },
+    { label: 'Avg MTTR', value: avgMttr, icon: '⏱', accent: '#c084fc', sub: 'Mean time to resolution' },
+    { label: 'Hotspot Lead', value: topRiskComp.split('/')[0].trim(), icon: '🎯', accent: '#fb923c', sub: 'Highest risk score' },
+    { label: 'Duplicate Rate', value: duplicateRate, icon: '🔁', accent: '#34d399', sub: 'KB-matched duplicates' },
+    { label: 'Fix Confidence', value: selfHealRate, icon: '✅', accent: '#10b981', sub: 'Multi-agent verified' },
   ];
 
   /* ── RENDER ─────────────────────────────────────────────────────────────── */
@@ -504,7 +517,7 @@ export default function AnalyticsPanel() {
           <GlassCard>
             <SectionHeader icon="🔥" title="Failure Hotspot Map" subtitle="Risk scores calculated from failure frequency, MTTR, and severity weight" accent="#f87171" />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
-              {Object.entries(COMPONENT_DETAILS).sort((a,b) => b[1].hotspotScore - a[1].hotspotScore).map(([name, d]) => {
+              {Object.entries(componentDetails).sort((a,b) => b[1].hotspotScore - a[1].hotspotScore).map(([name, d]) => {
                 const col = hotspotColour(d.hotspotScore);
                 return (
                   <div key={name} className="hotspot-card" onClick={() => setSelectedComponent(selectedComponent === name ? null : name)} style={{
@@ -565,7 +578,7 @@ export default function AnalyticsPanel() {
           <GlassCard accent="#c084fc">
             <SectionHeader icon="⏱" title="Mean-Time-to-Resolution (MTTR)" subtitle="Average time from bug creation to verified fix per component" accent="#c084fc" />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {MTTR_DATA.sort((a,b) => a.hours - b.hours).map((row, i) => (
+              {mttrData.sort((a,b) => a.hours - b.hours).map((row, i) => (
                 <div key={i} className="mttr-row" style={{
                   display: 'flex', alignItems: 'center', gap: 14,
                   padding: '10px 14px', borderRadius: 10,
@@ -613,7 +626,7 @@ export default function AnalyticsPanel() {
           <GlassCard accent="#38bdf8">
             <SectionHeader icon="📈" title="Error Frequency Trend" subtitle="14-day rolling defect volume by severity" accent="#38bdf8" />
             <ResponsiveContainer width="100%" height={320}>
-              <AreaChart data={TREND_DATA} margin={{ top: 10, right: 20, left: -10, bottom: 4 }}>
+              <AreaChart data={trendData} margin={{ top: 10, right: 20, left: -10, bottom: 4 }}>
                 <defs>
                   <linearGradient id="gradCrit" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%"  stopColor="#f87171" stopOpacity={0.35}/>
@@ -696,7 +709,7 @@ export default function AnalyticsPanel() {
             <SectionHeader icon="🧩" title="Component Breakdown" subtitle="Detailed error patterns, affected files, and failure counts per module" accent="#a78bfa" />
           </GlassCard>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 16 }}>
-            {Object.entries(COMPONENT_DETAILS).map(([name, d], compIdx) => {
+            {Object.entries(componentDetails).map(([name, d], compIdx) => {
               const accent = COMPONENT_COLOURS[compIdx % COMPONENT_COLOURS.length];
               const col = hotspotColour(d.hotspotScore);
               return (

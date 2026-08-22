@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     upload_dir: str = Field(default="uploads", alias="UPLOAD_DIR")
     database_url: str = Field(default="sqlite:///ai_smart_bug_analyzer_and_fix_advisor.db", alias="DATABASE_URL")
 
+    use_lightweight_embeddings: bool = Field(default=True, alias="USE_LIGHTWEIGHT_EMBEDDINGS")
     embedding_model: str = Field(
         default="sentence-transformers/all-MiniLM-L6-v2",
         alias="EMBEDDING_MODEL",

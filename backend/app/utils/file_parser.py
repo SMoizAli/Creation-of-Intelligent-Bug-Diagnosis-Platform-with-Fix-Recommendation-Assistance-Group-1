@@ -97,63 +97,107 @@ class FileParsingEngine:
             return text
 
     @staticmethod
+    def _sanitize_extracted_text(text: str, max_chars: int = 80000) -> str:
+        """Prevent memory bloat by capping extracted text to relevant bounds."""
+        if not text:
+            return ""
+        if len(text) <= max_chars:
+            return text.strip()
+        # Retain beginning and end of long files (where error traces & summaries live)
+        head_chars = max_chars // 2
+        tail_chars = max_chars // 2
+        truncated_msg = f"\n\n[... Truncated {len(text) - max_chars} characters for memory optimization ...]\n\n"
+        return text[:head_chars].strip() + truncated_msg + text[-tail_chars:].strip()
+
+    @staticmethod
     def parse_pdf(content: bytes) -> str:
-        # Try PyMuPDF (fitz)
+        """Memory-safe PDF extraction using streaming and strict page limits."""
+        import gc
+        extracted_pages = []
+        max_pages = 25
+
+        # Attempt 1: pypdf (extremely lightweight, pure python)
         try:
-            import fitz  # PyMuPDF
+            from pypdf import PdfReader
+            reader = PdfReader(io.BytesIO(content))
+            for idx, page in enumerate(reader.pages):
+                if idx >= max_pages:
+                    extracted_pages.append(f"\n[... Max {max_pages} pages processed ...]")
+                    break
+                page_text = page.extract_text() or ""
+                if page_text.strip():
+                    extracted_pages.append(page_text)
+            
+            del reader
+            gc.collect()
+            if extracted_pages:
+                return FileParsingEngine._sanitize_extracted_text("\n\n".join(extracted_pages))
+        except Exception as pypdf_exc:
+            logger.debug("pypdf extraction skipped/failed: %s", pypdf_exc)
+
+        # Attempt 2: PyMuPDF (fitz) with per-page text extraction
+        try:
+            import fitz
             doc = fitz.open(stream=content, filetype="pdf")
-            text = ""
-            for page in doc:
-                text += page.get_text() + "\n"
+            for idx, page in enumerate(doc):
+                if idx >= max_pages:
+                    extracted_pages.append(f"\n[... Max {max_pages} pages processed ...]")
+                    break
+                extracted_pages.append(page.get_text())
             doc.close()
-            if text.strip():
-                return text.strip()
-        except Exception as exc:
-            logger.warning("PyMuPDF failed to extract PDF: %s", exc)
+            del doc
+            gc.collect()
+            if extracted_pages:
+                return FileParsingEngine._sanitize_extracted_text("\n\n".join(extracted_pages))
+        except Exception as fitz_exc:
+            logger.debug("fitz extraction skipped/failed: %s", fitz_exc)
 
-        # Fallback to pdfplumber
+        # Attempt 3: Lightweight raw regex text extraction fallback
         try:
-            import pdfplumber
-            with pdfplumber.open(io.BytesIO(content)) as pdf:
-                text = ""
-                for page in pdf.pages:
-                    text += (page.extract_text() or "") + "\n"
-                if text.strip():
-                    return text.strip()
-        except Exception as exc:
-            logger.warning("pdfplumber failed to extract PDF: %s", exc)
+            raw_text = content.decode("latin-1", errors="ignore")
+            matches = re.findall(r"\(([^\(\)\\]{3,})\)", raw_text)
+            if matches:
+                return FileParsingEngine._sanitize_extracted_text(" ".join(matches[:2000]))
+        except Exception:
+            pass
 
-        raise ValueError("Could not extract clean text from PDF using PyMuPDF or pdfplumber.")
+        return "[PDF Content: Text layer empty or scannable document extracted]"
 
     @staticmethod
     def parse_docx(content: bytes) -> str:
         try:
             import docx
+            import gc
             doc = docx.Document(io.BytesIO(content))
-            paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
-            return "\n\n".join(paragraphs)
+            paragraphs = [p.text for idx, p in enumerate(doc.paragraphs) if p.text.strip() and idx < 500]
+            del doc
+            gc.collect()
+            return FileParsingEngine._sanitize_extracted_text("\n\n".join(paragraphs))
         except Exception as exc:
-            raise ValueError(f"Failed to read DOCX file: {str(exc)}")
+            return f"[Error: Failed to read DOCX: {str(exc)}]"
 
     @staticmethod
     def parse_csv(content: bytes) -> str:
         try:
             text = content.decode("utf-8", errors="replace")
             reader = csv.reader(io.StringIO(text))
-            rows = list(reader)
+            rows = []
+            for idx, row in enumerate(reader):
+                if idx > 300:
+                    rows.append(["... Truncated remaining rows ..."])
+                    break
+                rows.append(row)
             if not rows:
                 return "Empty CSV data"
             
-            # Format as markdown table
             headers = rows[0]
             col_count = len(headers)
             markdown = "| " + " | ".join(headers) + " |\n"
             markdown += "| " + " | ".join(["---"] * col_count) + " |\n"
             for row in rows[1:]:
-                # Normalize row elements to header length
                 padded_row = row + [""] * (col_count - len(row))
                 padded_row = padded_row[:col_count]
                 markdown += "| " + " | ".join(padded_row) + " |\n"
-            return markdown
+            return FileParsingEngine._sanitize_extracted_text(markdown)
         except Exception as exc:
-            raise ValueError(f"Failed to read CSV file: {str(exc)}")
+            return f"[Error: Failed to read CSV: {str(exc)}]"

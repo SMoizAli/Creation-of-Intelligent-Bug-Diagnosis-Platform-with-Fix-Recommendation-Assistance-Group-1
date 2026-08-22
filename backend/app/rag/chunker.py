@@ -28,10 +28,12 @@ class TextChunker:
             separators=["\n\n", "\n", ". ", " ", ""],
         )
 
-    def split_text(self, text: str) -> List[str]:
+    def split_text(self, text: str, max_chunks: int = 12) -> List[str]:
         if not text.strip():
             return []
         chunks = self._splitter.split_text(text)
+        if len(chunks) > max_chunks:
+            chunks = chunks[:max_chunks]
         logger.debug("Split text into %d chunks", len(chunks))
         return chunks
 
@@ -39,9 +41,10 @@ class TextChunker:
         self,
         text: str,
         metadata: Dict[str, Any],
+        max_chunks: int = 12,
     ) -> List[Dict[str, Any]]:
         """Return chunks enriched with bug metadata."""
-        chunks = self.split_text(text)
+        chunks = self.split_text(text, max_chunks=max_chunks)
         return [
             {
                 "text": chunk,

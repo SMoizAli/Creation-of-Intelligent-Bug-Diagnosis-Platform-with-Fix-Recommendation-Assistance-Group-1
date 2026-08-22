@@ -61,19 +61,23 @@ class WorkflowOrchestrator:
         use_mmr: bool = True,
         retrieval_top_k: Optional[int] = None,
     ) -> Analysis:
-        logger.info("Starting workflow for bug %s, analysis %s", bug.id, analysis.id)
-        content = bug.raw_content or bug.description
+        import gc
+        logger.info("Starting memory-optimized workflow for bug %s, analysis %s", bug.id, analysis.id)
+        raw = bug.raw_content or bug.description or ""
+        
+        # Memory Protection: Keep agent evaluation string bounded to max 15,000 characters
+        content = raw[:15000].strip() if len(raw) > 15000 else raw
         analysis.status = AnalysisStatus.IN_PROGRESS
         analysis.agent_results = []
 
         import concurrent.futures
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             # --- STEP 1: RAG Retrieval (Search First!) ---
             logger.info("Performing knowledge base vector retrieval before indexing.")
             future_context = executor.submit(
                 self.retriever.retrieve,
-                query=content,
+                query=content[:2500],
                 top_k=retrieval_top_k,
                 use_mmr=use_mmr,
             )
@@ -144,7 +148,7 @@ class WorkflowOrchestrator:
             analysis.agent_results.append(conf_result)
             analysis.confidence_scoring = conf_result.output
 
-        # --- STEP 9: Executive Summary (NEW!) ---
+        # --- STEP 9: Executive Summary ---
         analysis.current_stage = WorkflowStage.EXECUTIVE_SUMMARY
         exec_result = self.executive_summary_agent.execute(
             bug_content=content,
@@ -157,7 +161,7 @@ class WorkflowOrchestrator:
         analysis.agent_results.append(exec_result)
         analysis.executive_summary = exec_result.output
 
-        # --- STEP 10: Index Bug in Vector Store (Insert Afterwards!) ---
+        # --- STEP 10: Index Bug in Vector Store ---
         logger.info("Indexing current bug into knowledge base after analysis completion.")
         try:
             metadata = {
@@ -170,9 +174,12 @@ class WorkflowOrchestrator:
                 "tags": ",".join(triage_result.output.get("tags", [])),
             }
             chunks = self.chunker.split_with_metadata(content, metadata)
-            self.retriever.index_bug(bug.id, chunks)
+            # Limit stored chunks per bug to max 10 to keep ChromaDB memory footprint tiny
+            self.retriever.index_bug(bug.id, chunks[:10])
         except Exception as exc:
             logger.error("Failed to index bug into ChromaDB knowledge base: %s", exc)
+
+        gc.collect()
 
         # --- STEP 11: Capture Combined Outputs (UnifiedBugAnalysis) ---
         logger.info("Capturing combined outputs into UnifiedBugAnalysis format.")

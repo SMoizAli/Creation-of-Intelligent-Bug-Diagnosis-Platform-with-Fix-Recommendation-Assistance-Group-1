@@ -62,33 +62,6 @@ export default function App() {
     document.body.className = theme === 'dark' ? 'dark-theme' : 'light-theme';
   }, [theme]);
 
-  // File Upload Preview complete
- const handleUploadComplete = async ({ content, file }) => {
-    setUiState('uploading');
-    try {
-      const result = await submitBug({ content, file });
-      // Safely grab the bug object whether it's nested or returned directly
-      const bugData = result.bug || result;
-      setSubmittedBug(bugData);
-      setUiState('preview_ready');
-      setActiveView('upload');
-      setNotification('Bug report parsed successfully. Ready for AI Analysis.');
-    } catch (err) {
-      setUiState('error');
-      setNotification(err.message || 'Parsing failed.');
-    }
-  };
-
-  // ── Unified pipeline stage ticker (shared by upload AND rag/voice paths) ──
-  const handleStageChange = (idx, label) => {
-    setTimelineIndex(idx);
-    setActiveAgent(label);
-  };
-
-  // ── RAG handlers removed — Ask RAG feature disabled ────────────────────
-  // const handleRagAnalysisReady = ...
-  // const handleRagPipelineStart = ...
-
   // Helper: persist a completed analysis as the "last analyzed bug" for KB sync
   const persistLastAnalyzedBug = (analysisObj, bugObj) => {
     const record = { analysis: analysisObj, bug: bugObj, analyzedAt: new Date().toISOString() };
@@ -97,8 +70,9 @@ export default function App() {
   };
 
   // Run the multi-agent analysis timeline
-  const handleInitiateAnalysis = async () => {
-    if (!submittedBug) return;
+  const handleInitiateAnalysis = async (targetBug) => {
+    const bug = targetBug || submittedBug;
+    if (!bug || !bug.id) return;
     setUiState('processing');
     setActiveView('analysis');
     setTimelineIndex(0);
@@ -122,26 +96,50 @@ export default function App() {
       } else {
         clearInterval(interval);
       }
-    }, 400);
+    }, 350);
 
     try {
-      const analyzeResult = await analyzeBug(submittedBug.id);
+      const analyzeResult = await analyzeBug(bug.id);
       clearInterval(interval);
-      setAnalysis(analyzeResult.analysis);
+      const analysisData = analyzeResult?.analysis || analyzeResult;
+      setAnalysis(analysisData);
       setUiState('completed');
       setTimelineIndex(stages.length);
       // ── Capture into shared KB-sync state ───────────────────────────────
-      persistLastAnalyzedBug(analyzeResult.analysis, submittedBug);
-      // Auto redirect to results after a short delay
+      persistLastAnalyzedBug(analysisData, bug);
+      // Auto redirect to results (Analysis Findings)
       setTimeout(() => {
         setActiveView('results');
-        setNotification('Enterprise multi-agent analysis finished successfully.');
-      }, 500);
+        setNotification('Enterprise multi-agent analysis finished successfully. Findings ready.');
+      }, 400);
     } catch (err) {
       clearInterval(interval);
       setUiState('error');
       setNotification(err.message || 'Analysis pipeline failed.');
     }
+  };
+
+  // File Upload & Automatic Pipeline Transition
+  const handleUploadComplete = async ({ content, file }) => {
+    setUiState('uploading');
+    try {
+      const result = await submitBug({ content, file });
+      // Safely grab the bug object whether it's nested or returned directly
+      const bugData = result.bug || result;
+      setSubmittedBug(bugData);
+      setNotification('Bug report submitted. Launching multi-agent diagnosis...');
+      // Automatically switch to analysis view and run pipeline
+      await handleInitiateAnalysis(bugData);
+    } catch (err) {
+      setUiState('error');
+      setNotification(err.message || 'Parsing failed.');
+    }
+  };
+
+  // ── Unified pipeline stage ticker (shared by upload AND rag/voice paths) ──
+  const handleStageChange = (idx, label) => {
+    setTimelineIndex(idx);
+    setActiveAgent(label);
   };
 
   // Click row from history to view results

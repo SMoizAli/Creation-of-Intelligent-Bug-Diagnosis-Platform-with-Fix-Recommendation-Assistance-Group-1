@@ -24,13 +24,23 @@ function resolveApiBase() {
 
 export const API_BASE = resolveApiBase();
 
-async function request(path, options = {}) {
+async function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function request(path, options = {}, retries = 2, backoff = 1000) {
+  const method = (options.method || 'GET').toUpperCase();
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+  const hasBody = options.body !== undefined && options.body !== null;
   
   const headers = { ...(options.headers || {}) };
-  if (!isFormData && !headers['Content-Type'] && !headers['content-type']) {
-    headers['Content-Type'] = 'application/json';
-  } else if (isFormData) {
+
+  // Only attach Content-Type when there is an actual JSON body to prevent unwanted CORS preflight & 400s
+  if (hasBody && !isFormData) {
+    if (!headers['Content-Type'] && !headers['content-type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+  } else {
     delete headers['Content-Type'];
     delete headers['content-type'];
   }
@@ -38,21 +48,42 @@ async function request(path, options = {}) {
   const endpoint = path.startsWith('/') ? path : `/${path}`;
   const url = `${API_BASE}${endpoint}`;
 
+  // Use timeout of 20s for general calls, 90s for analysis/upload
+  const timeoutMs = options.timeout || (endpoint.includes('/analyze') || isFormData ? 90000 : 20000);
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+
   try {
     const response = await fetch(url, {
       ...options,
       headers,
+      signal: controller ? controller.signal : undefined,
     });
+
+    if (timeoutId) clearTimeout(timeoutId);
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
+      // If server returned 502/503/504 (cold start), retry
+      if ([502, 503, 504].includes(response.status) && retries > 0) {
+        await wait(backoff);
+        return request(path, options, retries - 1, backoff * 2);
+      }
       throw new Error(data.message || data.detail || `Request failed with status ${response.status}`);
     }
     return data;
   } catch (err) {
-    if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
-      console.warn(`[ASBA Network Warning] Failed to reach backend at ${url}.`, err);
-      throw new Error(`Unable to reach backend server. If Render is waking up from sleep, please retry in a few seconds.`);
+    if (timeoutId) clearTimeout(timeoutId);
+
+    const isNetworkErr = err.name === 'TypeError' || err.name === 'AbortError' || err.message?.includes('fetch');
+    if (isNetworkErr && retries > 0) {
+      await wait(backoff);
+      return request(path, options, retries - 1, backoff * 2);
+    }
+
+    if (isNetworkErr) {
+      console.warn(`[ASBA Network] Connection to ${url} unavailable.`, err.message);
+      throw new Error(`Unable to connect to backend server. If Render is waking from sleep, please try again in a few moments.`);
     }
     throw err;
   }

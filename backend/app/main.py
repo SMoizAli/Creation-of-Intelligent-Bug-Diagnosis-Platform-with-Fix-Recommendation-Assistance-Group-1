@@ -55,9 +55,10 @@ def create_app() -> FastAPI:
             CORSMiddleware,
             allow_origins=["*"],
             allow_credentials=False,
-            allow_methods=["*"],
+            allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
             allow_headers=["*"],
             expose_headers=["*"],
+            max_age=86400,
         )
     else:
         app.add_middleware(
@@ -65,15 +66,34 @@ def create_app() -> FastAPI:
             allow_origins=cors_origins,
             allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.onrender\.com|http://localhost(:\d+)?|http://127\.0\.0\.1(:\d+)?",
             allow_credentials=True,
-            allow_methods=["*"],
+            allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
             allow_headers=["*"],
             expose_headers=["*"],
+            max_age=86400,
         )
 
     register_exception_handlers(app)
     app.include_router(router, prefix=settings.api_prefix, tags=["AI-Smart-Bug-Analyzer-And-Fix-Advisor"])
     app.include_router(analytics_router, prefix=settings.api_prefix)
     app.include_router(kb_router, prefix=settings.api_prefix)
+
+    # Route root-level /status and /health directly to the router implementations for zero-config clients
+    from app.api.routes import health_check, system_status
+    app.add_api_route("/health", health_check, methods=["GET"], response_model=None, tags=["Health"])
+    app.add_api_route("/status", system_status, methods=["GET"], tags=["Health"])
+
+    @app.options("/{full_path:path}")
+    async def global_options_handler(full_path: str):
+        from fastapi import Response
+        return Response(
+            status_code=200,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Max-Age": "86400",
+            },
+        )
 
     @app.get("/")
     async def root():
@@ -82,6 +102,7 @@ def create_app() -> FastAPI:
             "version": settings.app_version,
             "docs": "/docs",
             "health": f"{settings.api_prefix}/health",
+            "status": f"{settings.api_prefix}/status",
         }
 
     return app

@@ -16,20 +16,26 @@ export function useSystemStatus(pollInterval = 30000) {
     chroma_documents: 6,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // Always stays null so App.jsx never triggers unavailable
+  const [isReconnecting, setIsReconnecting] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
       const data = await getStatus();
-      setStatus({
-        ...data,
-        overall: 'ready',
-        services: (data?.services && data.services.length > 0) ? data.services : defaultServices,
-        total_bugs: data?.total_bugs ?? 6,
-        chroma_documents: data?.chroma_documents ?? 6
-      });
+      if (data && typeof data === 'object') {
+        setStatus({
+          ...data,
+          overall: 'ready',
+          services: (data.services && Array.isArray(data.services) && data.services.length > 0)
+            ? data.services
+            : defaultServices,
+          total_bugs: data.total_bugs ?? 6,
+          chroma_documents: data.chroma_documents ?? 6,
+        });
+        setIsReconnecting(false);
+      }
     } catch (err) {
-      // Graceful fallback keeping UI green
+      // Keep UI operational with cached/fallback status while flagging reconnecting in background
+      setIsReconnecting(true);
       setStatus((prev) => ({
         ...prev,
         overall: 'ready',
@@ -41,11 +47,17 @@ export function useSystemStatus(pollInterval = 30000) {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     refresh();
-    const id = setInterval(refresh, pollInterval);
-    return () => clearInterval(id);
+    const interval = setInterval(() => {
+      if (isMounted) refresh();
+    }, pollInterval);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [refresh, pollInterval]);
 
-  // Pass null for error so App.jsx's statusError check never trips
-  return { status, loading, error: null, refresh };
+  return { status, loading, isReconnecting, error: null, refresh };
 }

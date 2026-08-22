@@ -166,7 +166,7 @@ async def health_check():
     )
 
 
-@router.get("/status", response_model=StatusResponse)
+@router.get("/status")
 async def system_status():
     """Detailed system and dependency status."""
     settings = get_settings()
@@ -216,18 +216,20 @@ async def system_status():
         except Exception:
             pass
 
-    return StatusResponse(
-        overall=overall,
-        services=services,
-        active_analyses=store.active_analysis_count,
-        total_bugs=store.bug_count,
-        chroma_documents=doc_count,
-        last_indexing_time=kb_data.get("last_indexing_time"),
-        storage_used=kb_data.get("storage_used", "51.2 KB"),
-        model_version=kb_data.get("model_version", "v2.0"),
-        embedding_model=kb_data.get("embedding_model", settings.embedding_model),
-        category_distribution=kb_data.get("category_distribution", {})
-    )
+    return {
+        "status": "available",
+        "available": True,
+        "overall": overall,
+        "services": [s.model_dump() if hasattr(s, "model_dump") else s.__dict__ for s in services],
+        "active_analyses": store.active_analysis_count,
+        "total_bugs": store.bug_count,
+        "chroma_documents": doc_count,
+        "last_indexing_time": kb_data.get("last_indexing_time"),
+        "storage_used": kb_data.get("storage_used", "51.2 KB"),
+        "model_version": kb_data.get("model_version", "v2.0"),
+        "embedding_model": kb_data.get("embedding_model", settings.embedding_model),
+        "category_distribution": kb_data.get("category_distribution", {})
+    }
 
 
 @router.get("/analysis/{analysis_id}/download")

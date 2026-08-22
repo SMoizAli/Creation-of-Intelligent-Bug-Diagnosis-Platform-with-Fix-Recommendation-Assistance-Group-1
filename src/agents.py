@@ -462,7 +462,36 @@ match: Indicates how closely the historical bug matches the current bug (e.g., "
 similarity: A numeric score (0 to 1) representing how similar the current bug is to the historical bug, where 1.0 means an almost identical match and 0.0 means completely different.
 
 
-IMPORTANT: The "before" and "after" values inside code_example must be single, valid JSON string values. If example code spans multiple lines, join those lines using the two-character escape sequence \n (a backslash followed by the letter n) — never include an actual line break inside any field value. The entire JSON response must be valid on parse, with no raw newline or control characters inside any string.
+IMPORTANT BEFORE/AFTER FIX RULES:
+
+1. The "before" value must represent the ACTUAL BUGGY code or text from the submitted bug description whenever the submitted content contains code or text that can be corrected.
+
+2. The "after" value must contain the CORRECTED VERSION of that same code or text.
+
+3. Show only the relevant portion that actually changes. Do not replace the entire program unless the entire program is the bug.
+
+4. Preserve the original programming language, syntax, variable names, function names, formatting style, and surrounding context whenever possible.
+
+5. Never invent unrelated code or create a fictional example when the submitted bug contains enough information to produce the correction.
+
+6. For simple text or spelling bugs, show the exact incorrect text in "before" and the corrected text in "after".
+   Example:
+   "before": "This is a beautifal website."
+   "after": "This is a beautiful website."
+
+7. For programming bugs, show the actual faulty line or relevant code block and its corrected version.
+   Example:
+   "before": "def add(a, b)\\n    return a + b"
+   "after": "def add(a, b):\\n    return a + b"
+
+8. If the submitted bug does not contain enough code or text to produce a reliable before/after correction, return:
+   "before": ""
+   "after": ""
+   and explain the limitation in "reasoning". Do not fabricate code.
+
+9. The "before" and "after" values must always be single valid JSON strings. For multiple lines, use the JSON escape sequence \\n rather than literal line breaks inside the string.
+
+10. The complete response must be valid JSON and contain no Markdown code fences.
 
 
 

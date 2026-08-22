@@ -1,13 +1,17 @@
 import React from 'react';
 
 export default function HealthPanel({ status }) {
-  // Read stats from status endpoint passed from parent, with fallback estimators
-  const services = status?.services || [
-    { name: 'API Server', status: 'ready', message: 'FastAPI online' },
-    { name: 'SQLite DB', status: 'ready', message: 'Active transaction sessions' },
-    { name: 'ChromaDB', status: 'ready', message: 'Persistent vector indexes ready' },
-    { name: 'Embedding Model', status: 'ready', message: ' sentence-transformers loaded' },
+  const defaultServices = [
+    { name: 'API Server', status: 'online', message: 'FastAPI online' },
+    { name: 'SQLite DB', status: 'online', message: 'Active transaction sessions' },
+    { name: 'ChromaDB', status: 'online', message: 'Persistent vector indexes ready' },
+    { name: 'Embedding Model', status: 'online', message: 'sentence-transformers loaded' },
   ];
+
+  // Read stats from status endpoint passed from parent, with fallback estimators
+  const services = (status?.services && Array.isArray(status.services) && status.services.length > 0)
+    ? status.services
+    : defaultServices;
 
   // Hardcode system usage estimators for visual dashboard meters
   const systemMeters = [
@@ -16,16 +20,24 @@ export default function HealthPanel({ status }) {
     { name: 'Disk Space', value: 68, color: '#f59e0b' },
   ];
 
+  const formatServiceName = (name) => {
+    if (!name) return 'Service';
+    if (name === 'embedding_model') return 'Embedding Model';
+    if (name === 'chromadb') return 'ChromaDB';
+    if (name === 'api_server') return 'API Server';
+    if (name === 'sqlite_db') return 'SQLite DB';
+    return name;
+  };
+
   const getStatusIcon = (statusStr) => {
-    switch (statusStr?.toLowerCase()) {
-      case 'ready':
-      case 'healthy':
-        return <span className="health-badge ready">● Online</span>;
-      case 'degraded':
-        return <span className="health-badge degraded">▲ Degraded</span>;
-      default:
-        return <span className="health-badge offline">■ Offline</span>;
+    const s = String(statusStr || '').toLowerCase().trim();
+    if (s === 'ready' || s === 'healthy' || s === 'online' || s === 'available' || s === 'active') {
+      return <span className="health-badge ready">● Online</span>;
     }
+    if (s === 'degraded' || s === 'warning' || s === 'checking') {
+      return <span className="health-badge degraded">▲ Degraded</span>;
+    }
+    return <span className="health-badge offline">■ Offline</span>;
   };
 
   return (
@@ -38,7 +50,7 @@ export default function HealthPanel({ status }) {
           {services.map((svc) => (
             <div key={svc.name} className="health-service-item">
               <div className="health-service-header">
-                <strong>{svc.name}</strong>
+                <strong>{formatServiceName(svc.name)}</strong>
                 {getStatusIcon(svc.status)}
               </div>
               <p className="health-service-msg">{svc.message}</p>

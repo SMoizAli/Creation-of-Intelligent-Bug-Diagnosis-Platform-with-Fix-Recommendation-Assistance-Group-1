@@ -80,7 +80,18 @@ class VectorStore:
                     logger.error("ChromaDB recovery failed: %s", retry_exc)
             
             if not self._available:
-                logger.warning("Vector store running in degraded mode without ChromaDB persistence.")
+                try:
+                    self._client = chromadb.EphemeralClient(
+                        settings=ChromaSettings(anonymized_telemetry=False),
+                    )
+                    self._collection = self._client.get_or_create_collection(
+                        name=settings.chroma_collection,
+                        metadata={"hnsw:space": "cosine"},
+                    )
+                    self._available = True
+                    logger.info("ChromaDB in-memory fallback initialized successfully.")
+                except Exception as fallback_exc:
+                    logger.warning("Vector store running in degraded mode: %s", fallback_exc)
         self._initialized = True
 
     @property

@@ -47,6 +47,7 @@ class BugResponse(BaseModel):
     id: str
     title: str
     description: str
+    raw_content: Optional[str] = None
     file_name: Optional[str] = None
     status: BugStatus
     metadata: Dict[str, Any]

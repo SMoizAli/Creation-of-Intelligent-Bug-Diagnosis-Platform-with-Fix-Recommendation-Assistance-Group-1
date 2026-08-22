@@ -47,13 +47,28 @@ def create_app() -> FastAPI:
         debug=settings.debug,
     )
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origin_list,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    cors_origins = settings.cors_origin_list
+    allow_all = "*" in cors_origins or len(cors_origins) == 0
+
+    if allow_all:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=False,
+            allow_methods=["*"],
+            allow_headers=["*"],
+            expose_headers=["*"],
+        )
+    else:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=cors_origins,
+            allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.onrender\.com|http://localhost(:\d+)?|http://127\.0\.0\.1(:\d+)?",
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+            expose_headers=["*"],
+        )
 
     register_exception_handlers(app)
     app.include_router(router, prefix=settings.api_prefix, tags=["AI-Smart-Bug-Analyzer-And-Fix-Advisor"])

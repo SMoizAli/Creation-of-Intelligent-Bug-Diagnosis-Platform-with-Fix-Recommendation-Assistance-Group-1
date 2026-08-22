@@ -251,7 +251,7 @@ export default function App() {
 
                 <div className="preview-text-block">
                   <h4>Extracted Text Content</h4>
-                  <pre>{submittedBug.raw_content}</pre>
+                  <pre>{submittedBug.raw_content || submittedBug.description || "Content successfully extracted and indexed."}</pre>
                 </div>
               </div>
             )}

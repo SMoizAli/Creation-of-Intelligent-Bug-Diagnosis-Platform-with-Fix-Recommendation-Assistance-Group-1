@@ -136,3 +136,7 @@ export async function getAnalysis(analysisId) {
 export async function getBug(bugId) {
   return request(`/bug/${bugId}`);
 }
+
+export async function getDefectPatterns() {
+  return request('/analytics/defect-patterns');
+}

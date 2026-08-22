@@ -77,10 +77,14 @@ def create_app() -> FastAPI:
     app.include_router(analytics_router, prefix=settings.api_prefix)
     app.include_router(kb_router, prefix=settings.api_prefix)
 
-    # Route root-level /status and /health directly to the router implementations for zero-config clients
+    # Route root-level /status, /health, and analytics directly to the router implementations for zero-config clients
     from app.api.routes import health_check, system_status
+    from app.api.analytics import get_defect_patterns
     app.add_api_route("/health", health_check, methods=["GET"], response_model=None, tags=["Health"])
     app.add_api_route("/status", system_status, methods=["GET"], tags=["Health"])
+    app.add_api_route("/defect-patterns", get_defect_patterns, methods=["GET"], tags=["Analytics"])
+    app.add_api_route("/analytics/defect-patterns", get_defect_patterns, methods=["GET"], tags=["Analytics"])
+    app.add_api_route("/api/v1/defect-patterns", get_defect_patterns, methods=["GET"], tags=["Analytics"])
 
     @app.options("/{full_path:path}")
     async def global_options_handler(full_path: str):

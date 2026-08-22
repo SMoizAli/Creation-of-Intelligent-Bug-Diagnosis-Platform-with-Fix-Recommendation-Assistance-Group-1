@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import SelfHealingPR from './SelfHealingPR';
-
-const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
+import { API_BASE } from '../services/api';
 
 /* ── tiny helpers ─────────────────────────────────────────── */
 const safe = (val, fallback = '—') =>

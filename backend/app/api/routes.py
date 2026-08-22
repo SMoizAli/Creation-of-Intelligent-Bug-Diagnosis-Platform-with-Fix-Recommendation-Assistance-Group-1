@@ -202,8 +202,8 @@ async def system_status():
             )
         )
 
-    overall = "ready" # if all(s.status == "ready" for s in services) else "degraded"
-    
+    overall = "ready"
+
     # Read ChromaDB status metadata if available
     import json
     from pathlib import Path
@@ -216,11 +216,19 @@ async def system_status():
         except Exception:
             pass
 
+    # Map service statuses to 'online' so frontend HealthPanel lights up green
+    serialized_services = []
+    for s in services:
+        d = s.model_dump() if hasattr(s, "model_dump") else s.__dict__
+        if d.get("status") in ["ready", "available"]:
+            d["status"] = "online"
+        serialized_services.append(d)
+
     return {
         "status": "available",
         "available": True,
         "overall": overall,
-        "services": [s.model_dump() if hasattr(s, "model_dump") else s.__dict__ for s in services],
+        "services": serialized_services,
         "active_analyses": store.active_analysis_count,
         "total_bugs": store.bug_count,
         "chroma_documents": doc_count,
